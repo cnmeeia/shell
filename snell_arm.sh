@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+mkdir -p /root/snell
+
 echo "正在安装依赖..."
 
 if type wget unzip >/dev/null 2>&1; then
@@ -36,11 +38,13 @@ else
     npm install pm2 -g
 fi
 
+cd /root/snell/
+
 echo "正在下载snell..."
 wget https://dl.nssurge.com/snell/snell-server-v4.0.0-linux-aarch64.zip
 
 echo "正在解压snell..."
-rm -rf snell-server && unzip snell-server-v4.0.0-linux-aarch64.zip
+rm -rf snell-server && unzip snell-server-v4.0.0-linux-aarch64.zip && rm -f snell-server-v4.0.0-linux-aarch64.zip
 
 echo "正在创建配置文件..."
 cat << EOF > ./snell-server.conf
@@ -51,15 +55,20 @@ ipv6 = false
 obfs = http
 EOF
 
-echo "正在创建服务..."
-pm2 start ./snell-server -n snell
+if pm2 ls | grep -q snell; then
+    echo "正在启动snell..."
+    pm2 start ./snell-server -n snell
+else
+    echo "正在停止snell..."
+    pm2 stop snell && pm2 delete snell
+fi
 
-echo "正在启动服务..."
-pm2 start snell && pm2 save && pm2 ls
+echo "正在查看服务..."
+pm2 save && pm2 ls
 
 echo "安装完成！"
 
-echo "配置文件路径：/root/snell-server.conf"
+echo "配置文件路径：cat /root/snell/snell-server.conf"
 
 echo "服务管理命令：pm2 start snell"
 
