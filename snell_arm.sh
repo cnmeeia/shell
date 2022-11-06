@@ -44,7 +44,7 @@ echo "正在下载snell..."
 wget https://dl.nssurge.com/snell/snell-server-v4.0.0-linux-aarch64.zip
 
 echo "正在解压snell..."
-rm -rf snell-server && unzip snell-server-v4.0.0-linux-aarch64.zip && rm -f snell-server-v4.0.0-linux-aarch64.zip
+rm -rf snell-server && unzip snell-server-v4.0.0-linux-amd64.zip && rm -f snell-server-v4.0.0-linux-aarch64.zip
 
 echo "正在创建配置文件..."
 cat << EOF > ./snell-server.conf
@@ -55,12 +55,12 @@ ipv6 = false
 obfs = http
 EOF
 
-if pm2 ls | grep -q snell; then
-    echo "正在启动snell..."
-    pm2 start ./snell-server -n snell
+if [[ $? -eq 0 ]]; then
+    echo "正在重启snell..."
+    pm2 restart snell
 else
-    echo "正在停止snell..."
-    pm2 stop snell && pm2 delete snell
+    echo "正在启动snell..."
+    pm2 start ./snell-server -n snell -- -c ./snell-server.conf
 fi
 
 echo "正在查看服务..."
@@ -77,3 +77,4 @@ echo "服务停止命令：pm2 stop snell"
 echo "服务重启命令：pm2 restart snell"
 
 echo "服务删除命令：pm2 delete snell"
+
