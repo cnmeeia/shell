@@ -44,7 +44,7 @@ echo "正在下载snell..."
 wget https://dl.nssurge.com/snell/snell-server-v4.0.0-linux-aarch64.zip
 
 echo "正在解压snell..."
-rm -rf snell-server && unzip snell-server-v4.0.0-linux-amd64.zip && rm -f snell-server-v4.0.0-linux-aarch64.zip
+rm -rf snell-server && unzip snell-server-v4.0.0-linux-aarch64.zip && rm -f snell-server-v4.0.0-linux-aarch64.zip
 
 read -p "请输入snell服务端口(默认11443):" port
 
