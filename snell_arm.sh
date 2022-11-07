@@ -22,7 +22,7 @@ else
     if type apt >/dev/null 2>&1; then
         curl -sL https://deb.nodesource.com/setup_16.x | bash -
         apt install -y nodejs
-        elif type yum >/dev/null 2>&1; then
+    elif type yum >/dev/null 2>&1; then
         curl -sL https://rpm.nodesource.com/setup_16.x | bash -
         yum install -y nodejs
     else
@@ -46,35 +46,22 @@ wget https://dl.nssurge.com/snell/snell-server-v4.0.0-linux-aarch64.zip
 echo "正在解压snell..."
 rm -rf snell-server && unzip snell-server-v4.0.0-linux-amd64.zip && rm -f snell-server-v4.0.0-linux-aarch64.zip
 
+read -p "请输入snell服务端口(默认11443):" port
+
 echo "正在创建配置文件..."
-cat << EOF > ./snell-server.conf
+cat <<EOF >./snell-server.conf
 [snell-server]
-listen = 0.0.0.0:33670
+listen = 0.0.0.0:${port:-11443}
 psk = DsU0x9afoOKLoWI1kUYnlxj6tv3YDef
 ipv6 = false
 obfs = http
 EOF
 
-if [[ $? -eq 0 ]]; then
-    echo "正在重启snell..."
+# 如果有snell 运行则重启
+if [[ $(pm2 list | grep snell | wc -l) -gt 0 ]]; then
     pm2 restart snell
 else
-    echo "正在启动snell..."
     pm2 start ./snell-server -n snell -- -c ./snell-server.conf
 fi
 
-echo "正在查看服务..."
-pm2 save && pm2 ls
-
-echo "安装完成！"
-
-echo "配置文件路径：cat /root/snell/snell-server.conf"
-
-echo "服务管理命令：pm2 start snell"
-
-echo "服务停止命令：pm2 stop snell"
-
-echo "服务重启命令：pm2 restart snell"
-
-echo "服务删除命令：pm2 delete snell"
-
+echo "snell安装完成 🎉 🎉 🎉"
