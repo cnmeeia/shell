@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 if type docker >/dev/null 2>&1; then
     echo "docker 已经安装"
 else
