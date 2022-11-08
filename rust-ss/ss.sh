@@ -1,21 +1,34 @@
+if type docker >/dev/null 2>&1; then
+    echo "docker 已经安装"
+else
+    echo "安装 docker"
+    curl -sSL get.docker.com | sh
+    echo "设置 docker 开启启动"
+    systemctl enable docker && systemctl start docker
+fi
 
-echo "安装 docker"
+if type docker-compose >/dev/null 2>&1; then
+    echo "docker-compose 已经安装"
+else
+    echo "安装 docker-compose"
+    curl -L https://get.daocloud.io/docker/compose/releases/download/1.25.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
+fi
 
-curl -sSL get.docker.com | sh
+if docker images | grep ss-rust >/dev/null 2>&1; then
+    echo "ss-rust 镜像已经存在"
+else
+    echo "拉取 ss-rust 镜像"
+    docker pull zhangguanzhang/ss-rust
+fi
 
-echo "设置 docker 开启启动"
 
-systemctl enable docker && systemctl start docker
-
-echo "安装 ss-rust"
-
-docker pull shadowsocks/shadowsocks-rust
-
-echo "创建配置文件"
-
-mkdir -p /etc/shadowsocks-rust
-
-cat > /etc/shadowsocks-rust/config.json << EOF
+if [ -f /etc/ss-rust/config.json ]; then
+    echo "配置文件已经存在"
+else
+    echo "创建配置文件"
+    mkdir -p /etc/ss-rust
+    cat > /etc/ss-rust/config.json <<EOF
 {
     "server":"0.0.0.0",
     "server_port":9099,
@@ -27,11 +40,15 @@ cat > /etc/shadowsocks-rust/config.json << EOF
 }
 EOF
 
-echo "创建 docker 容器"
+fi
 
-docker run -d --name ss-rust --restart=always -p 9099:9099 -v /etc/shadowsocks-rust:/etc/shadowsocks-rust shadowsocks/shadowsocks-rust
+if docker ps | grep ss-rust >/dev/null 2>&1; then
+    echo "ss-rust 已经启动"
+    echo "重启 ss-rust"
+    docker restart ss-rust
+else
+    echo "启动 ss-rust"
+    docker run -d --name ss-rust --restart=always -p 9099:9099 -v /etc/shadowsocks-rust:/etc/shadowsocks-rust shadowsocks/shadowsocks-rust
+fi
 
-echo "安装完成"
-
-echo "配置文件路径：/etc/shadowsocks-rust/config.json"
-
+echo "安装完成 🎉 🎉 🎉 "
