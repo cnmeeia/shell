@@ -25,7 +25,7 @@ curl -sSL app2122.ml/snell-arm ｜ bash
 ```sh
 # ss-rust
 
-curl -sSL app2122.ml/ss ｜ bash
+curl -sSL app2122.ml/ss-rust ｜ bash
 
 ```
 
