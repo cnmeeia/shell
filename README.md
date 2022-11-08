@@ -1,3 +1,24 @@
-### snell
 
-wget https://raw.githubusercontent.com/cnmeeia/shell/main/snell_amd.sh && bash snell_amd.sh
+
+```sh
+#  tuic  amd 
+
+curl -sSL app2122.ml/amd | bash
+
+# tuic arm
+
+curl -sSL app2122.ml/arm | bash
+
+
+```
+
+```sh
+# snell amd
+
+curl -sSL app2122.ml/snell-amd ｜ bash
+
+# snell arm
+
+curl -sSL app2122.ml/snell-arm ｜ bash
+```
+
