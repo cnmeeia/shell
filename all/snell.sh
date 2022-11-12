@@ -108,5 +108,11 @@ echo "正在读取snell配置文件..."
 
 cat /root/snell/snell-server.conf
 
+echo "正在读取snell运行日志..."
+
+pm2 log snell-server --lines 10 --raw --nostream
+
+echo "snell安装完成 🎉 🎉 🎉 🎉 🎉 🎉 🎉 "
+
 echo "snell安装完成 🎉 🎉 🎉 🎉 🎉 🎉 🎉 "
 
