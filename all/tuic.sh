@@ -68,23 +68,16 @@ echo "申请证书..."
 if [[ -f /opt/tuic/fullchain.pem ]]; then
     echo "证书已申请 🎉"
 else
-    read -p "请输入域名: " DOMAIN
-    read -p "请输入邮箱: " EMAIL
     echo "正在申请证书..."
-    certbot certonly --standalone -d ${DOMAIN} --agree-tos --register-unsafely-without-email --email ${EMAIL}
-fi
-
-if [[ -f /opt/tuic/fullchain.pem ]]; then
-    echo "证书文件已配置 🎉"
-else
-    echo "配置证书文件..."
-
+    read -p "请输入域名: " DOMAIN
+    read -p "请输入邮箱(默认ssl@app2022.ml): " EMAIL
+    certbot certonly --standalone -d ${DOMAIN} --agree-tos --register-unsafely-without-email --email ${ EMAIL:-ssl@app2022.ml}
     cp /etc/letsencrypt/live/${DOMAIN}/*.pem /opt/tuic/
 fi
 
 echo "正在创建配置文件..."
 
-if [[ -f /opt/tuic/tuic.json ]]; then
+if [[ -f /opt/tuic/tuic.conf ]]; then
 
     echo "配置文件已存在🎉"
 else
@@ -94,12 +87,12 @@ else
 
     read -p "请输入端口:(默认11443)" port
 
-    cat >/opt/tuic/tuic.json <<EOF
+    cat >/opt/tuic/tuic.conf <<EOF
 {
     "port": ${port:-11443},
     "token": ["${password:-123456}"],
-    "certificate": "/etc/letsencrypt/live/${domain}/fullchain.pem",
-    "private_key": "/etc/letsencrypt/live/${domain}/privkey.pem",
+    "certificate": "/opt/tuic/fullchain.pem",
+    "private_key": "/opt/tuic/privkey.pem",
     "ip": "0.0.0.0",
     "congestion_controller": "bbr",
     "alpn": ["h3"]
@@ -108,7 +101,7 @@ EOF
 
 fi
 echo "正在启动tuic..."
-if [[ $(pm2 list | grep tuic-server | wc -l) -gt 0 ]]; then
+if [[ $(pm2 ls | grep tuic | wc -l) -gt 0 ]]; then
     echo "正在重启tuic..."
     pm2 restart tuic
 else
@@ -118,5 +111,9 @@ fi
 
 echo "开机自启动..."
 pm2 save
+
+echo "正在读取snell运行日志..."
+
+pm2 log tuic --lines 10 --raw --nostream
 
 echo "tuic 安装完成 🎉 🎉 🎉 "
