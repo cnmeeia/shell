@@ -108,3 +108,4 @@ echo "正在读取snell配置文件..."
 cat
 
 echo "snell安装完成 🎉 🎉 🎉 🎉 🎉 🎉 🎉 "
+
