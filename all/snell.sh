@@ -99,10 +99,8 @@ else
 fi
 
 echo "正在设置开机自启..."
-pm2 save
-pm2 ls
 
-echo "读取snell配置..."
+pm2 save
 
 echo "正在读取snell配置文件..."
 
