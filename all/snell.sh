@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ ! -d /root/snell ]]; then
+if [[ ! -d /root/snell/ ]]; then
   echo "文件夹已存在 🎉 "
   cd /root/snell
 
@@ -104,6 +104,7 @@ pm2 ls
 
 echo "读取snell配置..."
 
-cat /root/snell/snell-server.conf
+echo "正在读取snell配置文件..."
+cat
 
 echo "snell安装完成 🎉 🎉 🎉 🎉 🎉 🎉 🎉 "
