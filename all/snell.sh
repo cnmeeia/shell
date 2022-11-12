@@ -105,7 +105,8 @@ pm2 ls
 echo "读取snell配置..."
 
 echo "正在读取snell配置文件..."
-cat
+
+cat /root/snell/snell-server.conf
 
 echo "snell安装完成 🎉 🎉 🎉 🎉 🎉 🎉 🎉 "
 
