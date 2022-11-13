@@ -96,7 +96,7 @@ else
   echo "正在启动snell..."
   cd /root/snell
   pm2 start ./snell-server
-
+fi
 echo "正在设置开机自启..."
 
 pm2 save
