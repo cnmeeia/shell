@@ -95,8 +95,7 @@ if [[ $(pm2 list | grep snell-server | wc -l) -gt 0 ]]; then
 else
   echo "正在启动snell..."
   cd /root/snell
-  pm2 start ./snell-server -- -c snell-server.conf
-fi
+  pm2 start ./snell-server
 
 echo "正在设置开机自启..."
 
