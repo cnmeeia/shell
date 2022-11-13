@@ -81,10 +81,10 @@ if [[ -f /root/snell/snell-server.conf ]]; then
 else
   echo "snell-server.conf不存在 创建中..."
   cd /root/snell
-  read -p "请输入snell-server的端口:" port
+  read -p "请输入snell-server的端口(默认6789):" port
   cat <<EOF >snell-server.conf
 [snell-server]
-listen = ${port}
+listen = ${port:-6789}
 psk = DsU0x9afoOKLoWI1kUYnlxj6tv3YDef
 obfs = http
 EOF
