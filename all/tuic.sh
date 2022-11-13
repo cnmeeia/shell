@@ -70,8 +70,8 @@ if [[ -f /opt/tuic/fullchain.pem ]]; then
 else
     echo "正在申请证书..."
     read -p "请输入域名: " DOMAIN
-    read -p "请输入邮箱(默认ssl@app2022.ml): " EMAIL
-    certbot certonly --standalone -d ${DOMAIN} --agree-tos --register-unsafely-without-email --email ${ EMAIL:-ssl@app2022.ml}
+    read -p "请输入邮箱: " EMAIL
+    certbot certonly --standalone -d ${DOMAIN} --agree-tos --register-unsafely-without-email --email ${EMAIL}
     cp /etc/letsencrypt/live/${DOMAIN}/*.pem /opt/tuic/
 fi
 
