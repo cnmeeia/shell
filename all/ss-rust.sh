@@ -30,7 +30,7 @@ else
     echo "创建配置文件"
     read -p "请输入端口:(默认：9000)" PORT
     read -p "请输入密码:(默认：125390) " PASSWORD
-    cat << EOF >/etc/shadowsocks-rust/config.json 
+    cat >/etc/shadowsocks-rust/config.json << EOF
 {
     "server":"0.0.0.0",
     "server_port":${PORT:-9000},
