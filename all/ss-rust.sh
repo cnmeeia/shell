@@ -28,18 +28,21 @@ if [ -f /etc/shadowsocks-rust/config.json ]; then
     echo "配置文件已经存在 🎉 🎉 🎉"
 else
     echo "创建配置文件"
+
     read -p "请输入端口:(默认：9000)" PORT
     read -p "请输入密码:(默认：125390) " PASSWORD
-    cat > /etc/shadowsocks-rust/config.json << EOF
-{
-    "server":"0.0.0.0",
-    "server_port":${PORT:-9000},
-    "password":"${PASSWORD:-125390}",
-    "timeout":300,
-    "method":"aes-128-gcm",
-    "nameserver":"8.8.8.8",
-    "mode":"tcp_and_udp"
-}
+
+    cat <<EOF >/etc/shadowsocks-rust/config.json
+
+      {
+          "server":"0.0.0.0",
+          "server_port":${PORT:-9000},
+          "password":"${PASSWORD:-125390}",
+          "timeout":300,
+          "method":"aes-128-gcm",
+          "nameserver":"8.8.8.8",
+          "mode":"tcp_and_udp"
+      }
 EOF
 
 fi
