@@ -117,3 +117,11 @@ echo "正在读取snell运行日志..."
 pm2 log tuic --lines 10 --raw --nostream
 
 echo "tuic 安装完成 🎉 🎉 🎉 "
+
+echo "tuic 配置文件 "
+
+cat /opt/tuic/tuic.conf
+
+echo "tuic sha-256 指纹  "
+
+cd /opt/tuic && openssl x509 -fingerprint -sha256 -in fullchain.pem
