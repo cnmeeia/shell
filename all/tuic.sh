@@ -1,18 +1,32 @@
 #!/usr/bin/env bash
 
 if [[ ! -d /opt/tuic ]]; then
+    echo
     echo "创建文件夹"
     mkdir -p /opt/tuic && cd /opt/tuic
 else
+    echo
     echo "文件夹已存在 🎉 "
     cd /opt/tuic
 fi
 
-echo "正在安装依赖..."
+echo
+if tyoe jq >/dev/null 2>&1; then
+    echo
+    echo "jq 已安装 🎉 "
+else
+    echo "安装 jq"
+    apt install jq -y
+fi
 
+echo
+echo "正在安装依赖..."
+echo
 if typr wget certbot >/dev/null 2>&1; then
     echo "依赖已安装 🎉"
 else
+
+    echo
     echo "依赖未安装"
     if [[ -f /etc/redhat-release ]]; then
         yum install wget certbot -y
@@ -20,7 +34,8 @@ else
         apt install wget certbot -y
     fi
 fi
-
+echo
+echo
 if type node </dev/null >/dev/null 2>&1; then
     echo "已安装nodejs 🎉"
 else
@@ -36,14 +51,18 @@ else
         exit 1
     fi
 fi
-
+echo
+echo "安装 pm2"
+echo
 if type pm2 </dev/null >/dev/null 2>&1; then
     echo "已安装pm2 🎉"
 else
+    echo
     echo "正在安装pm2"
     npm install pm2 -g
 fi
 
+echo
 OS_ARCH=$(arch)
 if [[ ${OS_ARCH} == "x86_64" || ${OS_ARCH} == "x64" || ${OS_ARCH} == "amd64" ]]; then
     OS_ARCH="x86_64"
@@ -55,38 +74,65 @@ else
     OS_ARCH="amd64"
     echo "检测系统架构失败，使用默认架构: ${OS_ARCH}"
 fi
+echo
 
 echo "正在下载tuic..."
-if [[ -f /opt/tuic/tuic ]]; then
-    echo "tuic已存在 🎉"
+echo
+if [[ -f /opt/tuic/tuic-server-0.8.5 ]]; then
+
+    echo "tuic-server-0.8.5 已存在 🎉"
+
 else
-    echo "正在下载tuic..."
-    wget https://github.com/EAimTY/tuic/releases/download/0.8.5/tuic-server-0.8.5-${OS_ARCH}-linux-gnu -O tuic && chmod +x tuic
+    tag=$(wget -qO- -t1 -T2 "https://api.github.com/repos/EAimTY/tuic/releases/latest" | jq -r '.tag_name')
+
+    echo "最新版本为 ${tag}"
+
+    echo "正在下载tuic-server-&{tag}..."
+
+    wget https://github.com/EAimTY/tuic/releases/download/${tag}/tuic-server-${tag}-${OS_ARCH}-linux-gnu -O tuic-server-${tag} && chmod +x tuic-server-${tag}
 fi
 
+echo
 echo "申请证书..."
 if [[ -f /opt/tuic/fullchain.pem ]]; then
+    echo
     echo "证书已申请 🎉"
 else
+    echo
     echo "正在申请证书..."
+    echo
     read -p "请输入域名: " DOMAIN
+    echo
     read -p "请输入邮箱: " EMAIL
-    certbot certonly --standalone -d ${DOMAIN} --agree-tos --register-unsafely-without-email --email ${EMAIL}
+    certbot certonly \
+        --standalone \
+        --agree-tos \
+        --no-eff-email \
+        --email ssl@app2022.ml \
+        -d ${DOMAIN}
+    echo
+    echo "${DOMAIN}" >/opt/tuic/domain.txt
+    echo
     cp /etc/letsencrypt/live/${DOMAIN}/*.pem /opt/tuic/
 fi
 
+echo
 echo "正在创建配置文件..."
 
 if [[ -f /opt/tuic/tuic.conf ]]; then
-
+    echo
     echo "配置文件已存在🎉"
+    echo
 else
     echo "正在创建配置文件"
 
+    echo
     read -p "请输入密码:(默认123456) " password
+    echo
 
     read -p "请输入端口:(默认11443)" port
-
+    echo
+    echo
     cat >/opt/tuic/tuic.conf <<EOF
 {
     "port": ${port:-11443},
@@ -100,28 +146,51 @@ else
 EOF
 
 fi
-echo "正在启动tuic..."
+echo "正在启动tuic-server..."
 if [[ $(pm2 ls | grep tuic | wc -l) -gt 0 ]]; then
-    echo "正在重启tuic..."
-    pm2 restart tuic
+    echo
+    echo "tuic-server 已经运行... 🎉 "
+    pm2 ls
+    echo
 else
-    echo "正在启动tuic...🎉"
-    pm2 start ./tuic -- -c tuic.conf
+    echo
+    echo "正在启动tuic-server ..."
+    pm2 start ./tuic-server-0.8.5 -n tuic -- -c tuic.conf
 fi
 
+echo
 echo "开机自启动..."
-pm2 save
+echo
+pm2 save && pm2 ls
+echo
+echo "正在读取 tuic-server-0.8.5 运行日志..."
 
-echo "正在读取snell运行日志..."
-
+echo
 pm2 log tuic --lines 10 --raw --nostream
+echo
 
-echo "tuic 安装完成 🎉 🎉 🎉 "
+echo "配置 tuic-server-0.8.5 证书指纹 "
+echo
 
-echo "tuic 配置文件 "
+echo "$(cd /opt/tuic && openssl x509 -fingerprint -sha256 -in fullchain.pem -noout | cut -d = -f 2)"
 
-cat /opt/tuic/tuic.conf
+echo
 
-echo "tuic sha-256 指纹  "
+echo "surge 简易配置示例 "
 
-cd /opt/tuic && openssl x509 -fingerprint -sha256 -in fullchain.pem
+echo
+
+echo "tuic = tuic, $(curl https://api.my-ip.io/ip -s), $(cat /opt/tuic/tuic.conf | jq -r '.port'),sni=$(cat /opt/tuic/domain.txt),server-cert-fingerprint-sha256=$(cd /opt/tuic && openssl x509 -fingerprint -sha256 -in fullchain.pem -noout | cut -d = -f 2),token=$(cat /opt/tuic/tuic.conf | jq -r '.token[0]'),alpn=h3"
+
+echo
+
+echo "tuic-server-0.8.5  安装完成 🎉 🎉 🎉 "
+
+echo
+
+# 获取域名
+# echo "$(cat /opt/tuic/domain.txt)"
+
+# echo "$(curl https://api.my-ip.io/ip -s)"
+# echo "$(cat /opt/tuic/tuic.conf | jq -r '.port')"
+# echo "$(cat /opt/tuic/tuic.conf | jq -r '.token[0]')"
