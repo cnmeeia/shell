@@ -188,9 +188,3 @@ echo "tuic-server-0.8.5  安装完成 🎉 🎉 🎉 "
 
 echo
 
-# 获取域名
-# echo "$(cat /opt/tuic/domain.txt)"
-
-# echo "$(curl https://api.my-ip.io/ip -s)"
-# echo "$(cat /opt/tuic/tuic.conf | jq -r '.port')"
-# echo "$(cat /opt/tuic/tuic.conf | jq -r '.token[0]')"
