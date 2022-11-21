@@ -126,7 +126,11 @@ pm2 ls && pm2 log snell-server --lines 10 --raw --nostream
 echo
 echo "surge 配置文件"
 echo
+echo "=============================="
+echo
 echo "snell = snell,$(curl https://api.my-ip.io/ip -s),"$(cat /root/snell/snell-server.conf | grep "listen" | awk -F "=" '{print $2}' | sed 's/ //g')",psk=$(cat /root/snell/snell-server.conf | grep "psk" | awk -F "=" '{print $2}' | sed 's/ //g'),obfs=$(cat /root/snell/snell-server.conf | grep "obfs" | awk -F "=" '{print $2}' | sed 's/ //g'),version=4, reuse=true"
+echo
+echo "=============================="
 echo
 echo " snell 安装完成 🎉 "
 echo
