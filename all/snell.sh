@@ -122,7 +122,7 @@ cat /root/snell/snell-server.conf
 echo
 echo "正在读取snell运行日志..."
 echo
-pm2 ls && pm2 log snell-server --lines 10 --raw --nostream
+pm2 startup systemd && systemctl enable pm2-root && systemctl start pm2-root  && pm2 ls && pm2 log snell-server --lines 10 --raw --nostream 
 echo
 echo "surge 配置文件"
 echo
