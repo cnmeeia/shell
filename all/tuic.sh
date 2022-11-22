@@ -161,7 +161,7 @@ fi
 echo
 echo "开机自启动..."
 echo
-pm2 save && pm2 ls
+pm2 save && pm2 startup systemd && systemctl enable pm2-root && systemctl start pm2-root 
 echo
 echo "正在读取 tuic-server-0.8.5 运行日志..."
 
