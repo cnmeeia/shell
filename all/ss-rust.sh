@@ -32,11 +32,13 @@ if [ -f /etc/shadowsocks-rust/config.json ]; then
     echo
 else
     echo "创建配置文件"
-
+    echo
+    mkdir -p /etc/shadowsocks-rust
+    echo
     read -p "请输入端口:(默认：9000)" PORT
     echo
     read -p "请输入密码:(默认：125390) " PASSWORD
-echo
+    echo
     cat << EOF >/etc/shadowsocks-rust/config.json
 
       {
