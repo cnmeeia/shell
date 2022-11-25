@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+#install jq
+
+if type jq >/dev/null 2>&1; then
+    echo
+    echo "jq 已经安装 🎉"
+else
+    echo
+    echo " 安装 jq "
+    apt install jq -y >/dev/null 2>&1 || yum install jq -y >/dev/null 2>&1
+fi
+echo
 if type docker >/dev/null 2>&1; then
     echo "docker 已经安装 🎉 "
     echo
@@ -39,7 +50,7 @@ else
     echo
     read -p "请输入密码:(默认：125390) " PASSWORD
     echo
-    cat << EOF >/etc/shadowsocks-rust/config.json
+    cat <<EOF >/etc/shadowsocks-rust/config.json
 
       {
           "server":"0.0.0.0",
@@ -51,7 +62,7 @@ else
           "mode":"tcp_and_udp"
       }
 EOF
-echo
+    echo
 fi
 echo
 if docker ps | grep ss-rust >/dev/null 2>&1; then
