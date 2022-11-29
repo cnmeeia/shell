@@ -1,13 +1,7 @@
 #!/usr/bin/env bash
 
-if [[ ! -d /root/snell/ ]]; then
-  echo "文件夹已存在 🎉 "
-  cd /root/snell
-  echo
-else
-  echo "创建文件夹"
-  mkdir -p /root/snell && cd /root/snell
-fi
+mkdir -p /root/snell && cd /root/snell
+
 echo
 echo "正在安装依赖..."
 echo
@@ -23,39 +17,6 @@ else
   fi
 fi
 echo
-if type node </dev/null >/dev/null 2>&1; then
-  echo "已安装nodejs 🎉  "
-  echo
-else
-  echo "正在安装nodejs"
-  if type apt >/dev/null 2>&1; then
-    curl -sL https://deb.nodesource.com/setup_16.x | bash -
-    apt install -y nodejs
-  elif type yum >/dev/null 2>&1; then
-    curl -sL https://rpm.nodesource.com/setup_16.x | bash -
-    yum install -y nodejs
-  else
-    echo "不支持的操作系统！"
-    exit 1
-  fi
-fi
-
-if type pm2 </dev/null >/dev/null 2>&1; then
-  echo "已安装pm2 🎉 "
-  echo
-else
-  echo "正在安装pm2"
-  npm install pm2 -g
-fi
-
-if [[ ! -d /root/snell ]]; then
-  echo "创建文件夹"
-  echo
-  mkdir -p /root/snell
-else
-  echo "文件夹已存在 🎉 "
-  cd /root/snell
-fi
 
 OS_ARCH=$(arch)
 if [[ ${OS_ARCH} == "x86_64" || ${OS_ARCH} == "x64" || ${OS_ARCH} == "amd64" ]]; then
@@ -89,22 +50,17 @@ else
   rm -rf snell-server && unzip -o snell.zip && rm -f snell.zip && chmod +x snell-server
 fi
 echo
-if [[ -f /root/snell/snell-server.conf ]]; then
-  echo "snell-server.conf已存在 🎉 "
-  echo
-else
-  echo "snell-server.conf不存在 启动snell 生成配置文件"
-  echo
-  cd /root/snell
-  echo yes | ./snell-server
-  echo
-  echo "obfs = http" >>snell-server.conf
-fi
 
+cd /root/snell
 echo
-echo "正在读取snell运行日志..."
+echo yes | ./snell-server
 echo
-cd /root/snell && pm2 start ./snell-server -- -c snell-server.conf && pm2 log snell-server --lines 10 --raw --nostream
+echo "obfs = http" >>snell-server.conf
+echo
+echo "后台运行snell..."
+echo
+apt install screen -y && screen -dmS snell ./snell-server   
+
 echo
 echo "surge 配置文件"
 echo
