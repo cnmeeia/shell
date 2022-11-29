@@ -1,3 +1,4 @@
+
 #!/usr/bin/env bash
 
 if [[ ! -d /root/snell/ ]]; then
@@ -86,35 +87,37 @@ else
   echo
   echo "正在解压snell..."
   echo
-  unzip -o snell.zip && rm -f snell.zip && chmod +x snell-server
+  rm -rf snell-server && unzip -o snell.zip && rm -f snell.zip && chmod +x snell-server
 fi
 
 if [[ -f /root/snell/snell-server.conf ]]; then
-  echo "snell-server.conf已存在 🎉 "
-  echo
-else
-  echo
-  echo "snell-server.conf不存在 创建中..."
-  cd /root/snell
-  echo
-  read -p "请输入snell-server的端口:" port
-  echo
-  cat <<EOF >snell-server.conf
-[snell-server]
-listen = ${port}
-psk = DsU0x9afoOKLoWI1kUYnlxj6tv3YDef
-obfs = http
-EOF
-fi
-echo
-if [[ $(pm2 list | grep snell-server | wc -l) -gt 0 ]]; then
   echo "snell-server已启动 🎉 "
   echo
 else
   echo "正在启动snell..."
   cd /root/snell
+  echo
+  echo yes | ./snell-server
+  echo
+  echo "正在配置snell..."
+  echo
+  echo "请输入snell-server的端口"
+  read -p "端口: " port
+  cat >/root/snell/snell-server.conf <<EOF
+  [snell-server]
+  listen = 0.0.0.0:${port}
+  psk = qV6ppP5lEYjLqpsf9AY3CNOZ4on2erx
+  obfs = http
+  ipv6 = flase
+EOF
+  echo
+  echo "${port}" >/root/port.txt
+  echo
+  echo "正在启动snell..."
+  echo
   pm2 start ./snell-server -- -c snell-server.conf
-fi
+ fi
+
 echo
 echo "正在读取snell配置文件..."
 echo
@@ -122,13 +125,13 @@ cat /root/snell/snell-server.conf
 echo
 echo "正在读取snell运行日志..."
 echo
-pm2 startup systemd && systemctl enable pm2-root && systemctl start pm2-root  && pm2 ls && pm2 log snell-server --lines 10 --raw --nostream 
+pm2 ls && pm2 log snell-server --lines 10 --raw --nostream
 echo
 echo "surge 配置文件"
 echo
 echo "=============================="
 echo
-echo "snell = snell,$(curl https://api.my-ip.io/ip -s),"$(cat /root/snell/snell-server.conf | grep "listen" | awk -F "=" '{print $2}' | sed 's/ //g')",psk=$(cat /root/snell/snell-server.conf | grep "psk" | awk -F "=" '{print $2}' | sed 's/ //g'),obfs=$(cat /root/snell/snell-server.conf | grep "obfs" | awk -F "=" '{print $2}' | sed 's/ //g'),version=4, reuse=true"
+echo "snell = snell,$(curl https://api.my-ip.io/ip -s),"$(cat /root/port.txt)",psk=$(cat /root/snell/snell-server.conf | grep "psk" | awk -F "=" '{print $2}' | sed 's/ //g'),obfs=$(cat /root/snell/snell-server.conf | grep "obfs" | awk -F "=" '{print $2}' | sed 's/ //g'),version=4, reuse=true"
 echo
 echo "=============================="
 echo
