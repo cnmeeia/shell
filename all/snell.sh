@@ -86,7 +86,7 @@ else
   echo
   echo "正在解压snell..."
   echo
-  rm -rf snell-server && unzip -o snell.zip && rm -f snell.zip && chmod +x snell-server
+  unzip -o snell.zip && rm -f snell.zip && chmod +x snell-server
 fi
 
 if [[ -f /root/snell/snell-server.conf ]]; then
