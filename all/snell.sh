@@ -11,9 +11,9 @@ if type wget unzip >/dev/null 2>&1; then
 else
   echo "依赖未安装"
   if [[ -f /etc/redhat-release ]]; then
-    yum install wget unzip -y
+    yum update && yum install wget unzip -y
   else
-    apt install wget unzip -y
+    apt update && apt install wget unzip -y
   fi
 fi
 echo
