@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 
-mkdir -p /root/snell && cd /root/snell
-
+if [[ ! -d /root/snell/ ]]; then
+  echo "文件夹已存在 🎉 "
+  cd /root/snell
+  echo
+else
+  echo "创建文件夹"
+  mkdir -p /root/snell && cd /root/snell
+fi
 echo
 echo "正在安装依赖..."
 echo
@@ -11,12 +17,45 @@ if type wget unzip >/dev/null 2>&1; then
 else
   echo "依赖未安装"
   if [[ -f /etc/redhat-release ]]; then
-    yum update && yum install wget unzip -y
+    yum install wget unzip -y
   else
-    apt update && apt install wget unzip -y
+    apt install wget unzip -y
   fi
 fi
 echo
+if type node </dev/null >/dev/null 2>&1; then
+  echo "已安装nodejs 🎉  "
+  echo
+else
+  echo "正在安装nodejs"
+  if type apt >/dev/null 2>&1; then
+    curl -sL https://deb.nodesource.com/setup_16.x | bash -
+    apt install -y nodejs
+  elif type yum >/dev/null 2>&1; then
+    curl -sL https://rpm.nodesource.com/setup_16.x | bash -
+    yum install -y nodejs
+  else
+    echo "不支持的操作系统！"
+    exit 1
+  fi
+fi
+
+if type pm2 </dev/null >/dev/null 2>&1; then
+  echo "已安装pm2 🎉 "
+  echo
+else
+  echo "正在安装pm2"
+  npm install pm2 -g
+fi
+
+if [[ ! -d /root/snell ]]; then
+  echo "创建文件夹"
+  echo
+  mkdir -p /root/snell
+else
+  echo "文件夹已存在 🎉 "
+  cd /root/snell
+fi
 
 OS_ARCH=$(arch)
 if [[ ${OS_ARCH} == "x86_64" || ${OS_ARCH} == "x64" || ${OS_ARCH} == "amd64" ]]; then
@@ -49,18 +88,42 @@ else
   echo
   rm -rf snell-server && unzip -o snell.zip && rm -f snell.zip && chmod +x snell-server
 fi
-echo
 
-cd /root/snell
+if [[ -f /root/snell/snell-server.conf ]]; then
+  echo "snell-server.conf已存在 🎉 "
+  echo
+else
+  echo
+  echo "snell-server.conf不存在 创建中..."
+  cd /root/snell
+  echo
+  read -p "请输入snell-server的端口:" port
+  echo
+  cat <<EOF >snell-server.conf
+[snell-server]
+listen = 0.0.0.0:${port}
+psk = DsU0x9afoOKLoWI1kUYnlxj6tv3YDef
+ipv6 = false
+obfs = http
+EOF
+fi
 echo
-echo yes | ./snell-server
+if [[ $(pm2 list | grep snell-server | wc -l) -gt 0 ]]; then
+  echo "snell-server已启动 🎉 "
+  echo
+else
+  echo "正在启动snell..."
+  cd /root/snell
+  pm2 start ./snell-server -- -c snell-server.conf
+fi
 echo
-echo "obfs = http" >>snell-server.conf
+echo "正在读取snell配置文件..."
 echo
-echo "后台运行snell..."
+cat /root/snell/snell-server.conf
 echo
-apt install screen -y && screen -dmS snell ./snell-server   
-
+echo "正在读取snell运行日志..."
+echo
+pm2 ls && pm2 log snell-server --lines 10 --raw --nostream
 echo
 echo "surge 配置文件"
 echo
