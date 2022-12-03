@@ -16,7 +16,7 @@ if tyoe jq >/dev/null 2>&1; then
     echo "jq 已安装 🎉 "
 else
     echo "安装 jq"
-    apt install jq -y
+    apt install jq -y >/dev/null 2>&1 || yum install jq -y >/dev/null 2>&1
 fi
 
 echo
@@ -66,11 +66,13 @@ echo
 OS_ARCH=$(arch)
 if [[ ${OS_ARCH} == "x86_64" || ${OS_ARCH} == "x64" || ${OS_ARCH} == "amd64" ]]; then
     OS_ARCH="x86_64"
+    echo
     echo "当前系统架构为 ${OS_ARCH}"
 elif [[ ${OS_ARCH} == "aarch64" || ${OS_ARCH} == "aarch64" ]]; then
     OS_ARCH="aarch64"
     echo "当前系统架构为 ${OS_ARCH}"
 else
+    echo
     OS_ARCH="amd64"
     echo "检测系统架构失败，使用默认架构: ${OS_ARCH}"
 fi
@@ -79,16 +81,16 @@ echo
 echo "正在下载tuic..."
 echo
 if [[ -f /opt/tuic/tuic-server-0.8.5 ]]; then
-
+    echo
     echo "tuic-server-0.8.5 已存在 🎉"
 
 else
     tag=$(wget -qO- -t1 -T2 "https://api.github.com/repos/EAimTY/tuic/releases/latest" | jq -r '.tag_name')
-
+    echo
     echo "最新版本为 ${tag}"
-
+    echo
     echo "正在下载tuic-server-&{tag}..."
-
+    echo
     wget https://github.com/EAimTY/tuic/releases/download/${tag}/tuic-server-${tag}-${OS_ARCH}-linux-gnu -O tuic-server-${tag} && chmod +x tuic-server-${tag}
 fi
 
@@ -103,12 +105,12 @@ else
     echo
     read -p "请输入域名: " DOMAIN
     echo
-    read -p "请输入邮箱: " EMAIL
+    read -p "请输入邮箱:(默认ssl@app2022.ml)" EMAIL
     certbot certonly \
         --standalone \
         --agree-tos \
         --no-eff-email \
-        --email ssl@app2022.ml \
+        --email ${EMAIL:-ssl@app2022.ml} \
         -d ${DOMAIN}
     echo
     echo "${DOMAIN}" >/opt/tuic/domain.txt
@@ -161,7 +163,7 @@ fi
 echo
 echo "开机自启动..."
 echo
-pm2 save && pm2 startup systemd && systemctl enable pm2-root && systemctl start pm2-root 
+pm2 save && pm2 startup systemd && systemctl enable pm2-root && systemctl start pm2-root
 echo
 echo "正在读取 tuic-server-0.8.5 运行日志..."
 
@@ -177,18 +179,28 @@ echo "$(cd /opt/tuic && openssl x509 -fingerprint -sha256 -in fullchain.pem -noo
 echo
 
 echo "surge 简易配置示例 "
-
 echo
-echo "=============================="
-echo
-
-echo "tuic = tuic, $(curl https://api.my-ip.io/ip -s), $(cat /opt/tuic/tuic.conf | jq -r '.port'),sni=$(cat /opt/tuic/domain.txt),server-cert-fingerprint-sha256=$(cd /opt/tuic && openssl x509 -fingerprint -sha256 -in fullchain.pem -noout | cut -d = -f 2),token=$(cat /opt/tuic/tuic.conf | jq -r '.token[0]'),alpn=h3"
-
-echo
-echo "=============================="
+echo "=========================="
 echo
 
+echo "🇭🇰 香港 = tuic, $(curl https://api.my-ip.io/ip -s), $(cat /opt/tuic/tuic.conf | jq -r '.port'),sni=$(cat /opt/tuic/domain.txt),server-cert-fingerprint-sha256=$(cd /opt/tuic && openssl x509 -fingerprint -sha256 -in fullchain.pem -noout | cut -d = -f 2),token=$(cat /opt/tuic/tuic.conf | jq -r '.token[0]'),alpn=h3"
+
+echo "=========================="
+echo
+echo "stash 配置示例"
+echo
+echo "=========================="
+echo "
+  - name: 🇭🇰 香港
+    type: tuic
+    server: $(curl https://api.my-ip.io/ip -s)
+    port: $(cat /opt/tuic/tuic.conf | jq -r '.port')
+    token: "$(cat /opt/tuic/tuic.conf | jq -r '.token[0]')"
+    udp: true
+    skip-cert-verify: true
+    sni: "$(cat /opt/tuic/domain.txt)"
+    alpn:
+      - h3"
+echo "=========================="
+echo
 echo "tuic-server-0.8.5  安装完成 🎉 🎉 🎉 "
-
-echo
-
