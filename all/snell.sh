@@ -125,7 +125,7 @@ echo "正在读取snell运行日志..."
 echo
 pm2 ls && pm2 log snell-server --lines 10 --raw --nostream
 echo
-echo "surge 配置文件"
+echo "surge 配置示例 🎉。"
 echo
 echo "=============================="
 echo
