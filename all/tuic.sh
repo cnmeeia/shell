@@ -170,28 +170,21 @@ echo "正在读取 tuic-server-0.8.5 运行日志..."
 echo
 pm2 log tuic --lines 10 --raw --nostream
 echo
-
-echo "配置 tuic-server-0.8.5 证书指纹 "
+echo "配置 tuic ssl 证书指纹 "
 echo
-
 echo "$(cd /opt/tuic && openssl x509 -fingerprint -sha256 -in fullchain.pem -noout | cut -d = -f 2)"
-
 echo
-
-echo "surge 简易配置示例 "
 echo
-echo "=========================="
+echo "============ surge 简易配置示例 =============="
 echo
-
 echo "🇭🇰 香港 = tuic, $(curl https://api.my-ip.io/ip -s), $(cat /opt/tuic/tuic.conf | jq -r '.port'),sni=$(cat /opt/tuic/domain.txt),server-cert-fingerprint-sha256=$(cd /opt/tuic && openssl x509 -fingerprint -sha256 -in fullchain.pem -noout | cut -d = -f 2),token=$(cat /opt/tuic/tuic.conf | jq -r '.token[0]'),alpn=h3"
-
-echo "=========================="
 echo
-echo "stash 配置示例"
+echo "============================================"
 echo
-echo "=========================="
+echo
+echo "============ stash 简易配置示例 =============="
 echo "
-  - name: 🇭🇰 香港
+  - name: stash tuic
     type: tuic
     server: $(curl https://api.my-ip.io/ip -s)
     port: $(cat /opt/tuic/tuic.conf | jq -r '.port')
@@ -201,6 +194,9 @@ echo "
     sni: "$(cat /opt/tuic/domain.txt)"
     alpn:
       - h3"
-echo "=========================="
+echo
+echo "=============================================="
 echo
 echo "tuic-server-0.8.5  安装完成 🎉 🎉 🎉 "
+echo
+
