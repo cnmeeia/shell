@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-
-#install jq
-
 if type jq >/dev/null 2>&1; then
     echo
     echo "jq 已经安装 🎉"
