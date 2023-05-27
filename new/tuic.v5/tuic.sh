@@ -11,7 +11,7 @@ else
 fi
 
 echo
-if tyoe jq >/dev/null 2>&1; then
+if type jq >/dev/null 2>&1; then
     echo
     echo "jq 已安装 🎉 "
 else
@@ -142,11 +142,15 @@ else
     read -p "请输入密码:(默认125390) " password
     echo
     echo
+    if [ -z "$password" ] || [ "$password" = "null" ]; then
+        password="125390"
+    fi
+
     echo
     cat >/opt/tuic/v5/tuic.conf <<EOF
 {
     "server": "0.0.0.0:443",
-    "users": {"be998b07-ee5e-4c34-aa8d-2b2baad5b428": "${password}"},
+    "users": {"be998b07-ee5e-4c34-aa8d-2b2baad5b428": "$password"},
     "certificate": "/opt/tuic/v5/rsa.pem",
     "private_key": "/opt/tuic/v5/key.pem",
     "congestion_control": "bbr",
@@ -193,7 +197,7 @@ uuids=($(jq -r '.users | keys_unsorted[]' /opt/tuic/v5/tuic.conf))
 
 for uuid in "${uuids[@]}"; do
     password=$(jq -r ".users[\"$uuid\"]" /opt/tuic/v5/tuic.conf)
-
+    echo "UUID: ${uuid//\"/}, Password: $password"
 done
 
 echo
