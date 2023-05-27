@@ -183,25 +183,47 @@ echo "正在读取 tuic-server 运行日志..."
 echo
 pm2 log tuic --lines 10 --raw --nostream
 echo
-#echo "配置 tuic ssl 证书指纹 "
+echo "配置 tuic ssl 证书指纹 "
 echo
-#echo "$(cd /opt/tuic/v5 && openssl x509 -fingerprint -sha256 -in rsa.pem -noout | cut -d = -f 2)"
+echo "$(cd /opt/tuic/v5 && openssl x509 -fingerprint -sha256 -in rsa.pem -noout | cut -d = -f 2)"
 echo
 echo
-echo "============ surge 简易配置示例 =============="
 
 uuids=($(jq -r '.users | keys_unsorted[]' /opt/tuic/v5/tuic.conf))
 
 for uuid in "${uuids[@]}"; do
     password=$(jq -r ".users[\"$uuid\"]" /opt/tuic/v5/tuic.conf)
-    echo "UUID: ${uuid//\"/}, Password: $password"
+
 done
 
 echo
 echo "============ surge 简易配置示使用 =============="
-
+echo
+echo
 echo Tuic V5= tuic, $(curl https://api.my-ip.io/ip -s), 443, sni=$(cat /opt/tuic/v5/domain.txt), server-cert-fingerprint-sha256=$(cd /opt/tuic/v5 && openssl x509 -fingerprint -sha256 -in rsa.pem -noout | cut -d = -f 2),uuid=$uuid, alpn=h3,password=$password,version=5
-
+echo
+echo
 echo "=============================================="
+echo
+echo
+
+echo "============ stash 简易配置示使用 =============="
+echo
+echo "
+proxies:
+  - name: TUIC
+    port: 443
+    server: $(curl https://api.my-ip.io/ip -s)
+    type: tuic
+    skip-cert-verify: true
+    version: 5
+    uuid: $uuid
+    password: $password
+    alpn:
+      - h3"
+echo
+echo
+echo "=============================================="
+
 echo
 echo
