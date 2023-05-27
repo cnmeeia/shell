@@ -4,6 +4,12 @@
 bash <(curl -sSL app2122.ml/tuic)
 ```
 
+###  tuic v5
+
+```sh
+bash <(curl -sSL app2122.ml/tuicv5)
+```
+
 
 
 ### snell
