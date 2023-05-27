@@ -22,13 +22,14 @@ fi
 echo
 echo "正在安装依赖..."
 echo
-if typr wget >/dev/null 2>&1; then
+if type wget >/dev/null 2>&1; then
     echo "依赖已安装 🎉"
 else
 
     echo
     echo "依赖未安装"
     if [[ -f /etc/redhat-release ]]; then
+    
         yum install wget -y
     else
         apt install wget -y
