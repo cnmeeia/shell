@@ -26,6 +26,12 @@ bash <(curl -sSL app2122.ml/snell)
 bash <(curl -sSL app2122.ml/ss)
 ```
 
+###  sysctl 
+
+```sh
+bash <(curl -sSL app2122.ml/sysctl)
+```
+
 
 
 
