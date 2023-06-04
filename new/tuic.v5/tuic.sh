@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+
+
+if ls /opt/tuic/v5/*.pem 1>/dev/null 2>&1; then
+    echo "域名证书存在,脚本安装开始"
+else
+    echo "域名证书不不存在"
+    exit 1
+    echo
+    echo "域名证书不存在,脚本退出!"
+fi
+
 if [[ ! -d /opt/tuic/v5 ]]; then
     echo
     echo "创建文件夹"
