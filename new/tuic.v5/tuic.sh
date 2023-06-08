@@ -114,7 +114,7 @@ USER=EAimTY
 REPO=tuic
 
 response=$(curl --silent "https://api.github.com/repos/$USER/$REPO/releases")
-pre_release=$(echo "$response" | jq '.[] | select(.prerelease == true) | .tag_name' | head -n1 | sed -e 's/^"//' -e 's/"$//')
+pre_release=$(echo "$response" | jq '.[] | select(.prerelease == false) | .tag_name' | head -n1 | sed -e 's/^"//' -e 's/"$//')
 
 if [[ "$pre_release" == "null" ]]; then
     echo "There is no pre-release version available."
