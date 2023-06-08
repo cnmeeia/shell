@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
     echo
-    echo "在 /opt/tuic/v5/ 是否有域名证书？"
+    echo "在 /opt/tuic/v5/ 是否有域名证书"
 select yn in "是" "否"; do
     case $yn in
     是)
@@ -8,7 +8,7 @@ select yn in "是" "否"; do
         break
         ;;
     否)
-        echo "您没有 /opt/tuic/v5/ 的域名证书，脚本终止运行。"
+        echo "您没有 /opt/tuic/v5/ 的域名证书，脚本终止运行。如果你的域名是cloudflare托管的 你可以申请cloudflare的15年的源服务器证书"
         exit 1
         ;;
     *)
