@@ -51,6 +51,23 @@ else
         exit 1
     fi
 fi
+if ! type npm >/dev/null 2>&1; then
+    echo "npm 未安装，正在安装..."
+    if command -v apt >/dev/null 2>&1; then
+        apt update
+        apt install -y npm
+    elif command -v yum >/dev/null 2>&1; then
+        yum update
+        yum install -y npm
+    else
+        echo "不支持该系统的包管理器"
+        exit 1
+    fi
+    echo "npm 安装完成！"
+else
+    echo "npm 已经安装"
+fi
+
 echo
 echo "安装 pm2"
 echo
@@ -199,4 +216,3 @@ echo "=============================================="
 echo
 echo "tuic-server-0.8.5  安装完成 🎉 🎉 🎉 "
 echo
-

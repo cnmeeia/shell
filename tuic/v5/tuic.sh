@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-    echo
-    echo "在 /opt/tuic/v5/ 是否有域名证书"
+echo
+echo "在 /opt/tuic/v5/ 是否有域名证书"
 select yn in "是" "否"; do
     case $yn in
     是)
@@ -16,7 +16,7 @@ select yn in "是" "否"; do
         ;;
     esac
 done
-    echo
+echo
 if ls /opt/tuic/v5/*.pem 1>/dev/null 2>&1; then
     echo
     echo "域名证书存在,脚本安装开始"
@@ -57,7 +57,7 @@ else
     echo
     echo "依赖未安装"
     if [[ -f /etc/redhat-release ]]; then
-    
+
         yum install wget -y
     else
         apt install wget -y
@@ -80,6 +80,27 @@ else
         exit 1
     fi
 fi
+echo
+
+if ! type npm >/dev/null 2>&1; then
+    echo
+    echo "npm 未安装，正在安装..."
+    echo
+    if command -v apt >/dev/null 2>&1; then
+        sudo apt update
+        sudo apt install -y npm
+    elif command -v yum >/dev/null 2>&1; then
+        sudo yum update
+        sudo yum install -y npm
+    else
+        echo "不支持该系统的包管理器"
+        exit 1
+    fi
+    echo "npm 安装完成！"
+else
+    echo "npm 已经安装"
+fi
+
 echo
 echo "安装 pm2"
 echo
