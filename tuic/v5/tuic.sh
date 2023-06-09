@@ -87,11 +87,11 @@ if ! type npm >/dev/null 2>&1; then
     echo "npm 未安装，正在安装..."
     echo
     if command -v apt >/dev/null 2>&1; then
-        sudo apt update
-        sudo apt install -y npm
+         apt update
+         apt install -y npm
     elif command -v yum >/dev/null 2>&1; then
-        sudo yum update
-        sudo yum install -y npm
+         yum update
+         yum install -y npm
     else
         echo "不支持该系统的包管理器"
         exit 1
