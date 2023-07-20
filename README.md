@@ -1,13 +1,13 @@
 ###  tuic 
 
 ```sh
-bash <(curl -sSL app2122.ml/tuic)
+bash <(curl -sSL 19510272.xyz/tuic)
 ```
 
 ###  tuic v5
 
 ```sh
-bash <(curl -sSL app2122.ml/tuicv5)
+bash <(curl -sSL 19510272.xyz/tuicv5)
 ```
 
 
@@ -15,7 +15,7 @@ bash <(curl -sSL app2122.ml/tuicv5)
 ### snell
 
 ```sh
-bash <(curl -sSL app2122.ml/snell)
+bash <(curl -sSL 19510272.xyz/snell)
 ```
 
 
@@ -23,13 +23,13 @@ bash <(curl -sSL app2122.ml/snell)
 ### ss-rust
 
 ```sh
-bash <(curl -sSL app2122.ml/ss)
+bash <(curl -sSL 19510272.xyz/ss)
 ```
 
 ###  sysctl 
 
 ```sh
-bash <(curl -sSL app2122.ml/sysctl)
+bash <(curl -sSL 19510272.xyz/sysctl)
 ```
 
 
