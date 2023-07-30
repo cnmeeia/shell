@@ -1,21 +1,23 @@
 #!/usr/bin/env bash
 
-if [[ ! -d /root/snell/ ]]; then
-  echo "文件夹已存在 🎉 "
-  cd /root/snell
-  echo
+folder="/root/snell"
+
+if [ -d "$folder" ]; then
+  echo "文件夹已存在 🎉"
+  cd "$folder"
 else
   echo "创建文件夹"
-  mkdir -p /root/snell && cd /root/snell
+  mkdir -p "$folder" && cd "$folder" 
 fi
+
 echo
-echo "正在安装依赖..."
+echo "正在安装wget unzip ..."
 echo
 if type wget unzip >/dev/null 2>&1; then
-  echo "依赖已安装 🎉  "
+  echo "wget unzip 已安装 🎉  "
   echo
 else
-  echo "依赖未安装"
+  echo "wget unzip 未安装"
   if [[ -f /etc/redhat-release ]]; then
     yum install wget unzip -y
   else
