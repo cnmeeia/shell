@@ -63,7 +63,8 @@ else
   echo
   echo "npm 已经安装"
 fi
-
+echo
+echo
 if type pm2 </dev/null >/dev/null 2>&1; then
   echo "已安装pm2 🎉 "
   echo
