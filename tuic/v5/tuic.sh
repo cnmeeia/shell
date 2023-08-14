@@ -227,7 +227,7 @@ else
     echo
     echo "正在启动tuic-server ..."
     cd /opt/tuic/v5
-    pm2 start ./tuic-server -- -c /opt/tuic/v5/tuic.conf
+    pm2 start ./tuic-server -- -c /opt/tuic/v5/tuic.conf  && pm2 save
 fi
 
 echo
