@@ -139,7 +139,7 @@ if [[ $(pm2 list | grep snell-server | wc -l) -gt 0 ]]; then
 else
   echo "正在启动snell..."
   cd /root/snell
-  pm2 start ./snell-server -- -c snell-server.conf
+  pm2 start ./snell-server -- -c snell-server.conf && pm2 save
 fi
 echo
 echo "正在读取snell配置文件..."
