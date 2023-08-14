@@ -17,5 +17,5 @@ services:
     image: "mick2019/deepl:latest"
 EOL
 echo
-cd $PWD/deepl && docker-compose up -d
+docker-compose up -d
 echo
