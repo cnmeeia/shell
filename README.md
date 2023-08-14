@@ -34,4 +34,11 @@ bash <(curl -sSL 19510272.xyz/sysctl)
 
 
 
+###  deepl 
+
+```sh
+bash <(curl -sSL 19510272.xyz/deepl)
+```
+
+
 
