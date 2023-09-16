@@ -13,7 +13,7 @@ if type docker >/dev/null 2>&1; then
     echo
 else
     echo "安装 docker"
-    curl -sSL get.docker.com | sh
+    curl -sSL get.docker.com | sh >/dev/null 2>&1
     echo "设置 docker 开启启动"
     systemctl enable docker && systemctl start docker
 fi
