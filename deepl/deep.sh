@@ -6,7 +6,7 @@ echo $PWD/deepl
 echo
 cd $PWD/deepl
 echo
-cat >$PWD/docker-compose.yaml <<EOL
+cat >$PWD/deepl/docker-compose.yaml <<EOL
 version: "3.8"
 services:
   deepl:
