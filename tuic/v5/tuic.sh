@@ -254,7 +254,8 @@ echo
 echo "============ surge 简易配置示使用 =============="
 echo
 echo
-echo Tuic V5= tuic, $(curl https://api.my-ip.io/ip -s), 443, sni=$(cat /opt/tuic/v5/domain.txt), server-cert-fingerprint-sha256=$(cd /opt/tuic/v5 && openssl x509 -fingerprint -sha256 -in rsa.pem -noout | cut -d = -f 2),uuid=$uuid, alpn=h3,password=$password,version=5
+echo Tuic V5= tuic, $(echo "ss = ss, $(curl -s -4 http://www.cloudflare.com/cdn-cgi/trace | grep "ip" | awk -F "[=]" '{print $2}'), $(cat /etc/shadowsocks-rust/config.json | jq -r '.server_port'), encrypt-method=$(cat /etc/shadowsocks-rust/config.json | jq -r '.method'),password=$(cat /etc/shadowsocks-rust/config.json | jq -r '.password'),udp-relay=true"
+), 443, sni=$(cat /opt/tuic/v5/domain.txt), server-cert-fingerprint-sha256=$(cd /opt/tuic/v5 && openssl x509 -fingerprint -sha256 -in rsa.pem -noout | cut -d = -f 2),uuid=$uuid, alpn=h3,password=$password,version=5
 echo
 echo
 echo "=============================================="
@@ -267,7 +268,8 @@ echo "
 proxies:
   - name: TUIC
     port: 443
-    server: $(curl https://api.my-ip.io/ip -s)
+    server: $(echo "ss = ss, $(curl -s -4 http://www.cloudflare.com/cdn-cgi/trace | grep "ip" | awk -F "[=]" '{print $2}'), $(cat /etc/shadowsocks-rust/config.json | jq -r '.server_port'), encrypt-method=$(cat /etc/shadowsocks-rust/config.json | jq -r '.method'),password=$(cat /etc/shadowsocks-rust/config.json | jq -r '.password'),udp-relay=true"
+)
     type: tuic
     skip-cert-verify: true
     version: 5
