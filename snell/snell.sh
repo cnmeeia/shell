@@ -1,15 +1,4 @@
 #!/usr/bin/env bash
-
-folder="/root/snell"
-
-if [ -d "$folder" ]; then
-    echo "文件夹已存在 🎉"
-    cd "$folder"
-else
-    echo "创建文件夹"
-    mkdir -p "$folder" && cd "$folder"
-fi
-
 echo
 echo "正在安装wget unzip ..."
 echo
@@ -25,7 +14,6 @@ else
     fi
 fi
 echo
-# 检查当前系统是否已安装 Node.js
 if type node >/dev/null 2>&1; then
     echo "已安装 Node.js 🎉"
     echo
@@ -34,7 +22,6 @@ if type node >/dev/null 2>&1; then
 else
     echo "正在安装 Node.js..."
 
-    # 检查包管理器类型并安装 Node.js
     if type apt >/dev/null 2>&1; then
         curl -sL https://deb.nodesource.com/setup_current.x | -E bash -
         apt-get install -y nodejs
@@ -120,7 +107,7 @@ else
     echo "snell-server不存在 下载中..."
     echo
     cd /root/snell
-    wget https://dl.nssurge.com/snell/snell-server-v4.0.1-linux-${OS_ARCH}.zip -O snell.zip >/dev/null 2>&1
+    wget https://dl.nssurge.com/snell.html/snell-server-v4.0.1-linux-${OS_ARCH}.zip -O snell.zip >/dev/null 2>&1
     echo
     echo "正在解压snell..."
     echo
@@ -137,12 +124,15 @@ else
     echo
     read -p "请输入snell-server的端口:" port
     echo
-    cat <<EOF >snell-server.conf
+
+    cat <<EOF >/root/snell/snell-server.conf
+
 [snell-server]
 listen = 0.0.0.0:${port}
 psk = DsU0x9afoOKLoWI1kUYnlxj6tv3YDef
 ipv6 = false
 obfs = http
+
 EOF
 fi
 echo
