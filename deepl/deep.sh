@@ -7,8 +7,14 @@ echo
 cd $PWD/deepl
 echo
 echo "安装 docker-compose"
-wget https://github.com/docker/compose/releases/download/v2.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-chmod +x /usr/local/bin/docker-compose
+if type docker-compose >/dev/null 2>&1; then
+  echo "docker-compose 已经安装 🎉 "
+  echo
+else
+  echo "安装 docker-compose"
+  wget https://github.com/docker/compose/releases/download/v2.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+  chmod +x /usr/local/bin/docker-compose
+fi
 echo
 cat >$PWD/docker-compose.yaml <<EOL
 version: "3.8"
