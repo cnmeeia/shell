@@ -167,7 +167,7 @@ echo "surge 配置示例 🎉。"
 echo
 echo "=============================="
 echo
-echo "snell = snell,$(curl https://api.my-ip.io/ip -s),"$(cat /root/snell/snell-server.conf | grep "listen" | awk -F ":" '{print $2}' | sed 's/ //g')",psk=$(cat /root/snell/snell-server.conf | grep "psk" | awk -F "=" '{print $2}' | sed 's/ //g'),obfs=$(cat /root/snell/snell-server.conf | grep "obfs" | awk -F "=" '{print $2}' | sed 's/ //g'),version=4, reuse=true"
+echo "snell = snell,$(curl -s -4 http://www.cloudflare.com/cdn-cgi/trace | grep "ip" | awk -F "[=]" '{print $2}'),"$(cat /root/snell/snell-server.conf | grep "listen" | awk -F ":" '{print $2}' | sed 's/ //g')",psk=$(cat /root/snell/snell-server.conf | grep "psk" | awk -F "=" '{print $2}' | sed 's/ //g'),obfs=$(cat /root/snell/snell-server.conf | grep "obfs" | awk -F "=" '{print $2}' | sed 's/ //g'),version=4, reuse=true"
 echo
 echo "=============================="
 echo
