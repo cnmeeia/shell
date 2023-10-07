@@ -15,7 +15,7 @@ else
     chmod +x /usr/local/bin/docker-compose
 fi
 echo
-cat >$PWD/deepl/docker-compose.yaml <<EOL
+cat >$PWD/docker-compose.yaml <<EOL
 version: "3.8"
 services:
   deepl:
