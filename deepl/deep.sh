@@ -1,10 +1,7 @@
 #!/bin/bash
+
 echo
 mkdir -p $PWD/deepl
-echo
-echo $PWD/deepl
-echo
-cd $PWD/deepl
 echo
 echo "安装 docker-compose"
 if type docker-compose >/dev/null 2>&1; then
@@ -16,7 +13,8 @@ else
   chmod +x /usr/local/bin/docker-compose
 fi
 echo
-cat >$PWD/docker-compose.yaml <<EOL
+cd $PWD/deepl
+cat <<EOL >/docker-compose.yaml
 version: "3.8"
 services:
   deepl:
