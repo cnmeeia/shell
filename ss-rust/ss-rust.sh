@@ -82,7 +82,7 @@ echo
 echo "ss = ss, $(curl https://api.my-ip.io/ip -s), $(cat /etc/shadowsocks-rust/config.json | jq -r '.server_port'), encrypt-method=$(cat /etc/shadowsocks-rust/config.json | jq -r '.method'),password=$(cat /etc/shadowsocks-rust/config.json | jq -r '.password'),udp-relay=true"
 echo
 echo "=============================="
-
+echo
 echo " 安装完成 🎉 🎉 🎉 "
 
 echo

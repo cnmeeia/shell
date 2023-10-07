@@ -14,7 +14,8 @@ else
 fi
 echo
 cd $PWD/deepl
-cat <<EOL >/docker-compose.yaml
+echo
+cat >/docker-compose.yaml <<EOL
 version: "3.8"
 services:
   deepl:
