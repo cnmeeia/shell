@@ -1,21 +1,5 @@
 #!/usr/bin/env bash
 echo
-echo "在 /opt/tuic/v5/ 是否有域名证书"
-select yn in "是" "否"; do
-    case $yn in
-    是)
-        echo "证书已确认，脚本继续执行。"
-        break
-        ;;
-    否)
-        echo "您没有 /opt/tuic/v5/ 的域名证书，脚本终止运行。如果你的域名是cloudflare托管的 你可以申请cloudflare的15年的源服务器证书"
-        exit 1
-        ;;
-    *)
-        echo "请选择 是 或 否。"
-        ;;
-    esac
-done
 echo
 if ls /opt/tuic/v5/*.pem 1>/dev/null 2>&1; then
     echo
