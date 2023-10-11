@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 echo
 
-if ls /opt/tuic/v5/*.pem 1>/dev/null 2>&1; then
+if [[ ! -d /opt/tuic/v5 ]]; then
     echo
-    echo "域名证书存在,脚本安装开始"
+    echo "创建文件夹"
+    mkdir -p /opt/tuic/v5 && cd /opt/tuic/v5
 else
     echo
-    echo "域名证书不不存在"
-    exit 1
-    echo
-    echo "域名证书不存在,脚本退出!"
+    echo "文件夹已存在 🎉 "
+    cd /opt/tuic/v5
 fi
+echo 请确认 /opt/tuic/v5 文件夹有域名证书格式是 rsa.pem key.pem
 
 if [[ ! -d /opt/tuic/v5 ]]; then
     echo
@@ -71,11 +71,11 @@ if ! type npm >/dev/null 2>&1; then
     echo "npm 未安装，正在安装..."
     echo
     if command -v apt >/dev/null 2>&1; then
-         apt update
-         apt install -y npm
+        apt update
+        apt install -y npm
     elif command -v yum >/dev/null 2>&1; then
-         yum update
-         yum install -y npm
+        yum update
+        yum install -y npm
     else
         echo "不支持该系统的包管理器"
         exit 1
@@ -143,15 +143,10 @@ fi
 
 echo
 if [[ -f /opt/tuic/v5/domain.txt ]]; then
-    echo
     echo "域名已经存在"
-    echo
 else
-    echo
     read -p "请输入域名: " DOMAIN
-    echo
-    echo "${DOMAIN}" >/opt/tuic/v5/domain.txt
-    echo
+    echo "${DOMAIN}" >/opt/tuic/v5/domain.txt 
 fi
 echo
 if [[ -f /opt/tuic/v5/rsa.pem ]]; then
@@ -211,7 +206,7 @@ else
     echo
     echo "正在启动tuic-server ..."
     cd /opt/tuic/v5
-    pm2 start ./tuic-server -- -c /opt/tuic/v5/tuic.conf  && pm2 save
+    pm2 start ./tuic-server -- -c /opt/tuic/v5/tuic.conf && pm2 save
 fi
 
 echo
@@ -238,32 +233,28 @@ echo
 echo "============ surge 简易配置示使用 =============="
 echo
 echo
-echo Tuic V5= tuic, $(echo "ss = ss, $(curl -s -4 http://www.cloudflare.com/cdn-cgi/trace | grep "ip" | awk -F "[=]" '{print $2}'), $(cat /etc/shadowsocks-rust/config.json | jq -r '.server_port'), encrypt-method=$(cat /etc/shadowsocks-rust/config.json | jq -r '.method'),password=$(cat /etc/shadowsocks-rust/config.json | jq -r '.password'),udp-relay=true"
-), 443, sni=$(cat /opt/tuic/v5/domain.txt), server-cert-fingerprint-sha256=$(cd /opt/tuic/v5 && openssl x509 -fingerprint -sha256 -in rsa.pem -noout | cut -d = -f 2),uuid=$uuid, alpn=h3,password=$password,version=5
+echo Tuic V5= tuic, $(curl -s -4 http://www.cloudflare.com/cdn-cgi/trace | grep "ip" | awk -F "[=]" '{print $2}'), 443, sni=$(cat /opt/tuic/v5/domain.txt), server-cert-fingerprint-sha256=$(cd /opt/tuic/v5 && openssl x509 -fingerprint -sha256 -in rsa.pem -noout | cut -d = -f 2),uuid=$uuid, alpn=h3,password=$password,version=5
 echo
 echo
 echo "=============================================="
 echo
 echo
 
-echo "============ stash 简易配置示使用 =============="
-echo
+echo "============ stash 简易配置示例 =============="
 echo "
-proxies:
-  - name: TUIC
-    port: 443
-    server: $(echo "ss = ss, $(curl -s -4 http://www.cloudflare.com/cdn-cgi/trace | grep "ip" | awk -F "[=]" '{print $2}'), $(cat /etc/shadowsocks-rust/config.json | jq -r '.server_port'), encrypt-method=$(cat /etc/shadowsocks-rust/config.json | jq -r '.method'),password=$(cat /etc/shadowsocks-rust/config.json | jq -r '.password'),udp-relay=true"
-)
+  - name: stash tuic
     type: tuic
+    server: $(curl -s -4 http://www.cloudflare.com/cdn-cgi/trace | grep "ip" | awk -F "[=]" '{print $2}')
+    port: $(cat /opt/tuic/v5/tuic.conf | jq -r '.server' | awk -F':' '{print $2}')
+    token: "$(cat /opt/tuic/v5/tuic.conf | jq -r '.users | to_entries[] | "\(.key) \(.value)"')"
+    udp: true
     skip-cert-verify: true
-    version: 5
-    uuid: $uuid
-    password: $password
+    sni: "$(cat /opt/tuic/v5/domain.txt)"
     alpn:
       - h3"
 echo
-echo
 echo "=============================================="
-
+echo
+echo "tuic-server-0.8.5  安装完成 🎉 🎉 🎉 "
 echo
 echo
