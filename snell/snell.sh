@@ -98,6 +98,8 @@ else
     echo "检测系统架构失败，使用默认架构: ${OS_ARCH}"
 fi
 echo
+echo mkdir -p /root/snell 
+echo
 echo "正在下载snell..."
 echo
 if [[ -f /root/snell/snell-server ]]; then
@@ -106,11 +108,11 @@ if [[ -f /root/snell/snell-server ]]; then
 else
     echo "snell-server不存在 下载中..."
     echo
-    cd /root/snell
     wget https://github.com/Slotheve/Snell/raw/main/snell-server-v4.0.1-linux-${OS_ARCH}.zip -O snell.zip >/dev/null 2>&1
     echo
     echo "正在解压snell..."
     echo
+    
     rm -rf snell-server && unzip -o snell.zip && rm -f snell.zip && chmod +x snell-server
 fi
 
@@ -120,6 +122,7 @@ if [[ -f /root/snell/snell-server.conf ]]; then
 else
     echo
     echo "snell-server.conf不存在 创建中..."
+    
     cd /root/snell
     echo
     read -p "请输入snell-server的端口:" port
