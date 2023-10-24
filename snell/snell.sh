@@ -110,6 +110,8 @@ else
     echo
     wget https://github.com/Slotheve/Snell/raw/main/snell-server-v4.0.1-linux-${OS_ARCH}.zip -O snell.zip >/dev/null 2>&1
     echo
+    echo mv snell.zip /root/snell
+    echo
     echo "正在解压snell..."
     echo
     
