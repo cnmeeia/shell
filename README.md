@@ -1,35 +1,33 @@
-### tuic
+###  tuic 
 
 ```sh
-curl -sSL 19510272.xyz/tuic | sh
+bash <(curl -sSL 19510272.xyz/tuic)
 ```
 
-### tuic v5
+###  tuic v5
 
 ```sh
-curl -sSL 19510272.xyz/tuicv5 | sh
+bash <(curl -sSL 19510272.xyz/tuicv5)
 ```
+
+
 
 ### snell
 
 ```sh
-curl -sSL 19510272.xyz/snell | sh
+bash <(curl -sSL 19510272.xyz/snell)
 ```
+
+
 
 ### ss-rust
 
 ```sh
-curl -sSL 19510272.xyz/ss | sh
+bash <(curl -sSL 19510272.xyz/ss)
 ```
 
-### sysctl
+###  sysctl 
 
 ```sh
-curl -sSL 19510272.xyz/sysctl | sh
-```
-
-### deepl
-
-```sh
-curl -sSL 19510272.xyz/deepl | sh
+bash <(curl -sSL 19510272.xyz/sysctl)
 ```
