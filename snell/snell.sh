@@ -35,10 +35,8 @@ if type node </dev/null >/dev/null 2>&1; then
 else
   echo "正在安装nodejs"
   if type apt >/dev/null 2>&1; then
-    curl -sL https://deb.nodesource.com/setup_16.x | bash -
     apt install -y nodejs
   elif type yum >/dev/null 2>&1; then
-    curl -sL https://rpm.nodesource.com/setup_16.x | bash -
     yum install -y nodejs
   else
     echo "不支持的操作系统！"
