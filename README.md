@@ -31,3 +31,9 @@ bash <(curl -sSL 19510272.xyz/ss)
 ```sh
 bash <(curl -sSL 19510272.xyz/sysctl)
 ```
+
+###  docker 
+
+```sh
+bash <(curl -sSL 19510272.xyz/docker)
+```
