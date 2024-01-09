@@ -3,12 +3,12 @@
 ```sh
 bash <(curl -sSL 19510272.xyz/tuic)
 ```
-
 ###  tuic v5
 
 ```sh
 bash <(curl -sSL 19510272.xyz/tuicv5)
 ```
+
 ### snell
 
 ```sh
@@ -19,8 +19,6 @@ bash <(curl -sSL 19510272.xyz/snell)
 ```sh
 bash <(curl -sSL 19510272.xyz/ss)
 ```
-###  sysctl 
-
 ### Hysteria 2
 
 ```sh
