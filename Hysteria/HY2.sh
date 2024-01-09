@@ -94,10 +94,10 @@ ImkkP/iHQUuCvNY9Q9k8IrDEKFyhRANCAATC8hX2NAyhyRtlXRW4v9mhEn+4akIt
 -----END PRIVATE KEY-----
 
 EOF
-systemctl enable hysteria-server.service
-systemctl start hysteria-server.service
-systemctl status hysteria-server.service
-
-
+echo
 echo "Hysteria = hysteria2, $(curl -s -4 http://www.cloudflare.com/cdn-cgi/trace | grep "ip" | awk -F "[=]" '{print $2}'), 443, password=QI9cLzc/QSXr2nmNGU2lt1/1, skip-cert-verify=true, download-bandwidth=1024"
+echo 
+systemctl enable hysteria-server.service && systemctl start hysteria-server.service && systemctl status --no-pager hysteria-server.service
+echo
+echo
 
