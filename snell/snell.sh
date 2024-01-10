@@ -144,7 +144,7 @@ if [[ -n $(pm2 pid snell-server) ]]; then
 else
   echo "正在启动snell..."
   cd /root/snell
-  pm2 start ./snell-server -- -c snell-server.conf
+  pm2 start ./snell-server -- -c /root/snell/snell-server.conf
 fi
 echo
 echo "正在读取snell配置文件..."
