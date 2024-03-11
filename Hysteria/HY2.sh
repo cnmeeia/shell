@@ -3,6 +3,7 @@ echo -e "\ninstall hysteria\n"
 bash <(curl -fsSL https://get.hy2.sh/)
 mkdir -p /etc/hysteria/
 cat >/etc/hysteria/config.yaml <<EOF
+listen: :11443
 tls:
   cert: /etc/hysteria/rsa.pem
   key: /etc/hysteria/key.pem
