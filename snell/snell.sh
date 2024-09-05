@@ -108,7 +108,7 @@ else
   echo "snell-server不存在 下载中..."
   echo
   cd /root/snell
-  wget https://dl.nssurge.com/snell/snell-server-v4.0.1-linux-${OS_ARCH}.zip -O snell.zip >/dev/null 2>&1
+  wget https://dl.nssurge.com/snell/snell-server-v4.1.0-linux-${OS_ARCH}.zip -O snell.zip >/dev/null 2>&1
 
   
   echo
