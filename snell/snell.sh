@@ -133,6 +133,7 @@ else
 [snell-server]
 listen = 0.0.0.0:${port}
 psk = ${psk}
+dns = 1.1.1.1, 8.8.8.8, 2001:4860:4860::8888
 ipv6 = false
 obfs = http
 EOF
