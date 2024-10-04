@@ -27,52 +27,6 @@ else
   fi
 fi
 
-# 检查 nodejs 是否已安装
-echo "正在安装 nodejs ..."
-if type node >/dev/null 2>&1; then
-  echo "nodejs 已安装 🎉"
-else
-  echo "nodejs 未安装，正在安装..."
-  # 根据系统类型选择安装命令
-  if type apt >/dev/null 2>&1; then
-    apt install -y nodejs
-  elif type yum >/dev/null 2>&1; then
-    yum install -y nodejs
-  else
-    echo "不支持的操作系统！"
-    exit 1
-  fi
-fi
-
-# 检查 npm 是否已安装，如果未安装则安装
-echo "正在安装 npm ..."
-if ! type npm >/dev/null 2>&1; then
-  echo "npm 未安装，正在安装..."
-  # 根据系统类型选择安装命令
-  if command -v apt >/dev/null 2>&1; then
-    apt update
-    apt install -y npm
-  elif command -v yum >/dev/null 2>&1; then
-    yum update
-    yum install -y npm
-  else
-    echo "不支持该系统的包管理器"
-    exit 1
-  fi
-  echo "npm 安装完成！"
-else
-  echo "npm 已安装"
-fi
-
-# 检查 pm2 是否已安装，如果未安装则安装
-echo "正在安装 pm2 ..."
-if type pm2 >/dev/null 2>&1; then
-  echo "pm2 已安装 🎉"
-else
-  echo "pm2 未安装，正在安装..."
-  npm install pm2 -g
-fi
-
 # 检查 snell 文件夹是否存在，如果存在则进入
 if [[ -d /root/snell ]]; then
   echo "文件夹已存在 🎉"
@@ -133,22 +87,35 @@ obfs = http
 EOF
 fi
 
-# 检查 snell-server 是否已启动，如果未启动则启动
-echo "正在启动 snell-server ..."
-if [[ -n $(pm2 pid snell-server) ]]; then
-  echo "snell-server 已启动 🎉"
-else
-  echo "snell-server 未启动，正在启动..."
-  cd /root/snell && pm2 start ./snell-server -- -c /root/snell/snell-server.conf
-fi
+# 创建 systemd 服务文件
+echo "正在创建 systemd 服务文件 ..."
+cat <<EOF >/etc/systemd/system/snell-server.service
+[Unit]
+Description=Snell Server
+After=network.target
+
+[Service]
+ExecStart=/root/snell/snell-server -c /root/snell/snell-server.conf
+Restart=always
+User=root
+WorkingDirectory=/root/snell
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# 重新加载 systemd 守护进程
+echo "重新加载 systemd 守护进程 ..."
+systemctl daemon-reload
+
+# 启动并启用 snell-server 服务
+echo "正在启动 snell-server 服务 ..."
+systemctl start snell-server
+systemctl enable snell-server
 
 # 打印 snell-server.conf 内容
 echo "正在读取 snell-server.conf ..."
 cat /root/snell/snell-server.conf
-
-# 打印 snell-server 运行日志
-echo "正在读取 snell-server 运行日志 ..."
-pm2 ls && pm2 log snell-server --lines 10 --raw --nostream
 
 # 打印 Surge 配置示例
 echo "Surge 配置示例 🎉"
