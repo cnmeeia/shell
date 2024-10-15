@@ -1,3 +1,12 @@
+
+
+###  Shadowsocks-rust 2022 
+
+```sh
+bash <(curl -sSL 19510272.xyz/2022)
+```
+
+
 ###  tuic 
 
 ```sh
