@@ -23,6 +23,13 @@ bash <(curl -sSL 19510272.xyz/tuicv5)
 ```sh
 bash <(curl -sSL 19510272.xyz/snell)
 ```
+
+### snell-test
+
+```sh
+bash <(curl -sSL 19510272.xyz/snell-t)
+```
+
 ### ss-rust
 
 ```sh
