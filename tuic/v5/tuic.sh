@@ -176,7 +176,7 @@ else
     echo
     cat >/opt/tuic/v5/tuic.conf <<EOF
 {
-    "server": "0.0.0.0:443",
+    "server": "0.0.0.0:12443",
     "users": {"be998b07-ee5e-4c34-aa8d-2b2baad5b428": "$password"},
     "certificate": "/opt/tuic/v5/rsa.pem",
     "private_key": "/opt/tuic/v5/key.pem",
