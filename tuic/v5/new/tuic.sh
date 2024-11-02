@@ -42,20 +42,25 @@ fi
 echo
 
 echo "正在下载tuic..."
+if [[ -f /opt/tuic/v5/tuic-server ]]; then
+    echo
+    echo "tuic-server 已存在 🎉"
+else
 
-echo
-USER=EAimTY
-REPO=tuic
+    USER=EAimTY
+    REPO=tuic
 
-response=$(curl --silent "https://api.github.com/repos/$USER/$REPO/releases")
-pre_release=$(echo "$response" | jq '.[] | select(.prerelease == false) | .tag_name' | head -n1 | sed -e 's/^"//' -e 's/"$//')
+    response=$(curl --silent "https://api.github.com/repos/$USER/$REPO/releases")
+    pre_release=$(echo "$response" | jq '.[] | select(.prerelease == false) | .tag_name' | head -n1 | sed -e 's/^"//' -e 's/"$//')
 
-if [[ "$pre_release" == "null" ]]; then
-    echo "There is no pre-release version available."
-    exit 0
+    if [[ "$pre_release" == "null" ]]; then
+        echo "There is no pre-release version available."
+        exit 0
+    fi
+    echo "The latest pre-release version is: $pre_release"
 fi
+echo
 
-echo "The latest pre-release version is: $pre_release"
 echo
 if [[ -f /opt/tuic/v5/tuic-server ]]; then
     echo
@@ -95,20 +100,9 @@ if [[ -f /opt/tuic/v5/tuic.conf ]]; then
     echo
 else
     echo "正在创建配置文件"
-
     echo
     read -p "请输入密码:(默认125390) " password
-    password=${password:-125390} # 如果为空则使用默认值
-
-    while true; do
-        read -p "请输入端口:(默认15443) " port
-        port=${port:-15443} # 如果为空则使用默认值
-        if [[ "$port" =~ ^[0-9]+$ ]] && [ "$port" -ge 1024 ] && [ "$port" -le 65535 ]; then
-            break
-        else
-            echo "端口无效，请输入一个有效的端口号（1024-65535）。"
-        fi
-    done
+    read -p "请输入端口:(默认15443) " port
 
     cat >/opt/tuic/v5/tuic.conf <<EOF
 {
@@ -131,7 +125,14 @@ EOF
 
 fi
 
-cat <<EOF >/etc/systemd/system/tuic.service
+echo echo "正在创建 tuic 服务文件..."
+echo
+if [[ -f /etc/systemd/system/tuic.service ]]; then
+    echo "tuic 服务文件已存在🎉"
+else
+    echo "正在创建 tuic 服务文件"
+
+    cat <<EOF >/etc/systemd/system/tuic.service
 [Unit]
 Description=tuic
 After=network.target
@@ -140,12 +141,13 @@ Type=simple
 ExecStart=/opt/tuic/v5/tuic-server -c /opt/tuic/v5/tuic.conf
 [Install]
 WantedBy=multi-user.target
+
 EOF
-
-systemctl daemon-reload
-systemctl enable tuic
-systemctl start tuic
-
+fi
+echo
+echo "正在启动 tuic 服务..."
+systemctl daemon-reload && systemctl enable tuic && systemctl start tuic
+echo
 echo
 echo "配置 tuic ssl 证书指纹 "
 echo
@@ -164,7 +166,7 @@ echo
 echo "============ surge 简易配置示使用 =============="
 echo
 echo
-echo Tuic V5= tuic, $(curl -s -4 http://www.cloudflare.com/cdn-cgi/trace | grep "ip" | awk -F "[=]" '{print $2}'), "$port", sni=$(cat /opt/tuic/v5/domain.txt), server-cert-fingerprint-sha256=$(cd /opt/tuic/v5 && openssl x509 -fingerprint -sha256 -in rsa.pem -noout | cut -d = -f 2),uuid=$uuid, alpn=h3,password=$password,version=5
+echo Tuic V5= tuic, $(curl -s -4 http://www.cloudflare.com/cdn-cgi/trace | grep "ip" | awk -F "[=]" '{print $2}'), "$(jq -r '.server | split(":")[1]' "/opt/tuic/v5/tuic.conf")", sni=$(cat /opt/tuic/v5/domain.txt), server-cert-fingerprint-sha256=$(cd /opt/tuic/v5 && openssl x509 -fingerprint -sha256 -in rsa.pem -noout | cut -d = -f 2),uuid=$uuid, alpn=h3,password=$password,version=5
 echo
 echo
 echo "=============================================="
@@ -176,7 +178,7 @@ echo "
   - name: stash tuic
     type: tuic
     server: $(curl -s -4 http://www.cloudflare.com/cdn-cgi/trace | grep "ip" | awk -F "[=]" '{print $2}')
-    port: $port
+    port: $(jq -r '.server | split(":")[1]' "/opt/tuic/v5/tuic.conf")
     token: "$(cat /opt/tuic/v5/tuic.conf | jq -r '.users | to_entries[] | "\(.key) \(.value)"')"
     udp: true
     skip-cert-verify: true
