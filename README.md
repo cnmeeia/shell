@@ -18,6 +18,12 @@ bash <(curl -sSL 19510272.xyz/tuic)
 bash <(curl -sSL 19510272.xyz/tuicv5)
 ```
 
+###  new tuic v5
+
+```sh
+bash <(curl -sSL 19510272.xyz/tuic2)
+```
+
 ### snell
 
 ```sh
