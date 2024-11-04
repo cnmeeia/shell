@@ -119,14 +119,17 @@ if [[ -f /opt/tuic/v5/tuic.conf ]]; then
       echo "配置文件已存在 🎉"
       echo
 else
-echo "正在创建配置文件"
+      echo "正在创建配置文件"
 
-echo
-password="$(openssl rand -base64 12)" 
-port="$((RANDOM % 40001 + 10000))"     
-echo
+      echo
+      echo "随机密码"
+      password="$(openssl rand -base64 12)"
+      echo
+      echo "随机端口"
+      port="$((RANDOM % 40001 + 10000))"
+      echo
 
-cat >/opt/tuic/v5/tuic.conf <<EOF
+      cat >/opt/tuic/v5/tuic.conf <<EOF
 {
     "server": "0.0.0.0:${port}",
     "users": {"be998b07-ee5e-4c34-aa8d-2b2baad5b428": "${password}"},
@@ -144,7 +147,6 @@ cat >/opt/tuic/v5/tuic.conf <<EOF
     "log_level": "warn"
 }
 EOF
-
 
 fi
 
@@ -209,5 +211,3 @@ echo
 echo "tuic-server-0.8.5  安装完成 🎉 🎉 🎉 "
 echo
 echo
-
-
