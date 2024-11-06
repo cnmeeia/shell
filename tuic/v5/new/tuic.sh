@@ -186,7 +186,7 @@ echo
 echo "============ surge 简易配置示使用 =============="
 echo
 echo
-echo Tuic V5= tuic, $(curl api.ipify.org), $(jq -r '.server | split(":") | .[1]' /opt/tuic/v5/tuic.conf), sni=$(cat /opt/tuic/v5/domain.txt), server-cert-fingerprint-sha256=$(cd /opt/tuic/v5 && openssl x509 -fingerprint -sha256 -in rsa.pem -noout | cut -d = -f 2),uuid=$(jq -r '.users | keys[]' /opt/tuic/v5/tuic.conf), alpn=h3,password=$(jq -r '.users | to_entries[] | .value' /opt/tuic/v5/tuic.conf),version=5
+echo Tuic V5= tuic-v5, $(curl api.ipify.org), $(jq -r '.server | split(":") | .[1]' /opt/tuic/v5/tuic.conf), sni=$(cat /opt/tuic/v5/domain.txt), server-cert-fingerprint-sha256=$(cd /opt/tuic/v5 && openssl x509 -fingerprint -sha256 -in rsa.pem -noout | cut -d = -f 2),uuid=$(jq -r '.users | keys[]' /opt/tuic/v5/tuic.conf), alpn=h3,password=$(jq -r '.users | to_entries[] | .value' /opt/tuic/v5/tuic.conf),version=5
 echo
 echo
 echo "=============================================="
