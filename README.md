@@ -56,3 +56,10 @@ bash <(curl -sSL 19510272.xyz/sysctl)
 ```sh
 bash <(curl -sSL 19510272.xyz/docker)
 ```
+
+###  swap 
+
+```sh
+
+bash <(curl -sSL https://19510272.xyz/swap)
+```
