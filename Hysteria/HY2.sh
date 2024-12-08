@@ -2,33 +2,44 @@
 echo -e "\ninstall hysteria\n"
 bash <(curl -fsSL https://get.hy2.sh/)
 mkdir -p /etc/hysteria/
-cat >/etc/hysteria/config.yaml <<EOF
-listen: :11443
+echo
+rm -rf /etc/hysteria/config.yaml
+echo
+cat <<EOL >/etc/hysteria/config.yaml
+
+listen: :22659
+
 tls:
   cert: /etc/hysteria/rsa.pem
   key: /etc/hysteria/key.pem
-quic:
-  initStreamReceiveWindow: 8388608 
-  maxStreamReceiveWindow: 8388608 
-  initConnReceiveWindow: 20971520 
-  maxConnReceiveWindow: 20971520 
-  maxIdleTimeout: 30s 
-  maxIncomingStreams: 1024 
-  disablePathMTUDiscovery: false
-bandwidth:
-  up: 1 gbps
-  down: 1 gbps
-ignoreClientBandwidth: false
+
+
 auth:
   type: password
-  password: QI9cLzc/QSXr2nmNGU2lt1/1
+  password: PuzxVhZBqpq1i61tdXDuQWrNk
+
 masquerade:
   type: proxy
+  file:
+    dir: /www/masq
   proxy:
     url: https://news.ycombinator.com/
     rewriteHost: true
+  string:
+    content: hello stupid world
+    headers:
+      content-type: text/plain
+      custom-stuff: ice cream so good
+    statusCode: 200
 
-EOF
+bandwidth:
+  up: 0 gbps
+  down: 0 gbps
+
+udpIdleTimeout: 90s
+
+EOL
+echo
 echo -e "\nBBR\n"
 cat >/etc/sysctl.conf <<EOF
 
