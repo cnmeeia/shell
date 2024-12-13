@@ -61,5 +61,5 @@ bash <(curl -sSL 19510272.xyz/docker)
 
 ```sh
 
-bash <(curl -sSL https://19510272.xyz/swap)
+bash <(curl -sSL 19510272.xyz/swap)
 ```
