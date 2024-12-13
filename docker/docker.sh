@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-
+echo
+apt update && apt install wget curl unzip jq -y
+echo
 echo "安装 docker"
 
 curl -fsSL get.docker.com | sh
