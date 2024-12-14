@@ -48,7 +48,7 @@ if ! grep -q "$SSH_KEY" "$AUTHORIZED_KEYS" 2>/dev/null; then
 else
     echo "SSH 密钥已存在于 authorized_keys 中，跳过添加。"
 fi
-
+echo
 # 4. 设置正确的权限
 chmod 700 "$SSH_DIR"
 chmod 600 "$AUTHORIZED_KEYS"
@@ -68,5 +68,9 @@ if sshd -t; then
 else
     echo "SSHD 配置文件存在语法错误，请检查 $SSHD_CONFIG。"
 fi
-
+echo
 echo "脚本执行完成！"
+echo
+echo "重启"
+
+reboot
