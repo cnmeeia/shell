@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+
+echo
+apt install update && apt install wget curl unzip jq -y >/dev/null 2>&1
+echo
 # 设置默认文件夹路径
 folder="/root/snell"
 
