@@ -63,3 +63,10 @@ bash <(curl -sSL 19510272.xyz/docker)
 
 bash <(curl -sSL 19510272.xyz/swap)
 ```
+
+###  ssh 
+
+```sh
+
+bash <(curl -sSL 19510272.xyz/ssh)
+```
