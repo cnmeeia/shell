@@ -73,7 +73,7 @@ EOF
 start_ss_rust() {
   if ! docker ps | grep ss-rust >/dev/null 2>&1; then
     echo "启动 ss-rust"
-    docker run -d -p 9000:9000 -p 9000:9000/udp --name ss-rust --restart=always -v /etc/shadowsocks-rust:/etc/shadowsocks-rust teddysun/shadowsocks-rust
+    docker run -d -p $PORT:9000 -p $PORT:9000/udp --name ss-rust --restart=always -v /etc/shadowsocks-rust:/etc/shadowsocks-rust teddysun/shadowsocks-rust
   else
     echo "ss-rust 已经启动 🎉"
   fi
