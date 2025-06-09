@@ -70,3 +70,11 @@ bash <(curl -sSL 19510272.xyz/swap)
 
 bash <(curl -sSL 19510272.xyz/ssh)
 ```
+
+
+###  dufs 
+
+```sh
+
+bash <(curl -sSL 19510272.xyz/d)
+```
