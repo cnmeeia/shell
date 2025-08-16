@@ -53,6 +53,7 @@ EOF
 echo
 echo “密钥”
 echo
+
 cat <<EOF > /etc/hysteria/key.pem
 -----BEGIN PRIVATE KEY-----
 MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQguPFkhs62WG/6QUrD
@@ -60,6 +61,9 @@ LGwv6J5f8Fgqs6+jXpdT3JEJm9+hRANCAAQLlIoST1T1AreAZI+T9ZviUD3gKK23
 y/aPSsrIydKd6tpLNKpHtQmFsaYA+eOKOLVbTwo2ZUCloE7vuJtHtUwn
 -----END PRIVATE KEY-----
 EOF
+
+
+
 
 echo
 echo “证书”
