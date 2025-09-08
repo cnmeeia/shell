@@ -1,118 +1,94 @@
-#!/usr/bin/env bash
-echo
+#!/bin/bash
 
-if [[ ! -d /opt/tuic/v5 ]]; then
-      echo
-      echo "创建文件夹"
-      mkdir -p /opt/tuic/v5 && cd /opt/tuic/v5
-else
-      echo
-      echo "文件夹已存在 🎉 "
-      cd /opt/tuic/v5
+set -euo pipefail
+echo
+mkdir -p /opt/tuic/v5
+echo
+cd /opt/tuic/v5
+echo
+if [ -f "tuic-server" ]; then
+    echo "tuic-server 已经存在，跳过下载。"
+    else
+    echo
+    echo "tuic-server 不存在，开始下载。"
+#!/bin/bash
+
+set -euo pipefail
+
+# 定义 TUIC Server 版本
+readonly TUIC_VERSION="tuic-server-1.0.0"
+
+# 获取系统架构
+ARCH=$(uname -m)
+case "$ARCH" in
+    x86_64)  FILE_PATTERN="x86_64-unknown-linux-gnu" ;;
+    aarch64) FILE_PATTERN="aarch64-unknown-linux-gnu" ;; 
+    armv7l)  FILE_PATTERN="armv7-unknown-linux-gnueabihf" ;;
+    i386|i686) FILE_PATTERN="i686-unknown-linux-gnu" ;;
+    *)       echo "不支持的架构: $ARCH" && exit 1 ;;
+esac
+
+echo "检测到架构: $ARCH"
+echo "目标文件模式: $FILE_PATTERN"
+
+# 获取 GitHub Release 信息
+RELEASE_INFO=$(curl -s "https://api.github.com/repos/tuic-protocol/tuic/releases/tags/$TUIC_VERSION")
+
+# 提取下载链接（精确匹配架构）
+DOWNLOAD_URL=$(echo "$RELEASE_INFO" | jq -r --arg pattern "$FILE_PATTERN" '.assets[] | select(.name | endswith($pattern)) | .browser_download_url')
+
+if [ -z "$DOWNLOAD_URL" ]; then
+    echo "未找到适用于架构 $ARCH 的下载链接！"
+    exit 1
 fi
-echo 请确认 /opt/tuic/v5 文件夹有域名证书格式是 rsa.pem key.pem
 
-if [[ ! -d /opt/tuic/v5 ]]; then
-      echo
-      echo "创建文件夹"
-      mkdir -p /opt/tuic/v5 && cd /opt/tuic/v5
-else
-      echo
-      echo "文件夹已存在 🎉 "
-      cd /opt/tuic/v5
-fi
+echo "下载链接: $DOWNLOAD_URL"
 
-echo
-if type jq >/dev/null 2>&1; then
-      echo
-      echo "jq 已安装 🎉 "
-else
-      echo "安装 jq"
-      apt install jq -y >/dev/null 2>&1 || yum install jq -y >/dev/null 2>&1
-fi
+# 下载文件
+wget -O "/opt/tuic/v5/tuic-server" "$DOWNLOAD_URL"
+chmod +x "/opt/tuic/v5/tuic-server"
 
-echo
-echo "正在安装依赖..."
-echo
-if type wget >/dev/null 2>&1; then
-      echo "依赖已安装 🎉"
-else
+echo "下载完成！"
 
-      echo
-      echo "依赖未安装"
-      if [[ -f /etc/redhat-release ]]; then
-
-            yum install wget -y
-      else
-            apt install wget -y
-      fi
-fi
-echo
-echo
-
-echo
-OS_ARCH=$(arch)
-if [[ ${OS_ARCH} == "x86_64" || ${OS_ARCH} == "x64" || ${OS_ARCH} == "amd64" ]]; then
-      OS_ARCH="x86_64"
-      echo
-      echo "当前系统架构为 ${OS_ARCH}"
-elif [[ ${OS_ARCH} == "aarch64" || ${OS_ARCH} == "aarch64" ]]; then
-      OS_ARCH="aarch64"
-      echo "当前系统架构为 ${OS_ARCH}"
-else
-      echo
-      OS_ARCH="amd64"
-      echo "检测系统架构失败，使用默认架构: ${OS_ARCH}"
 fi
 echo
 
-echo "正在下载tuic..."
+cat <<EOF >/opt/tuic/v5/key.pem
+-----BEGIN PRIVATE KEY-----
+MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQguPFkhs62WG/6QUrD
+LGwv6J5f8Fgqs6+jXpdT3JEJm9+hRANCAAQLlIoST1T1AreAZI+T9ZviUD3gKK23
+y/aPSsrIydKd6tpLNKpHtQmFsaYA+eOKOLVbTwo2ZUCloE7vuJtHtUwn
+-----END PRIVATE KEY-----
+EOF
+
+cat <<EOF >/opt/tuic/v5/rsa.pem
+-----BEGIN CERTIFICATE-----
+MIIDSjCCAjKgAwIBAgIUcsRZmBnb5rxvIAvZUSp5ZUcznD0wDQYJKoZIhvcNAQEL
+BQAwgagxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQH
+Ew1TYW4gRnJhbmNpc2NvMRkwFwYDVQQKExBDbG91ZGZsYXJlLCBJbmMuMRswGQYD
+VQQLExJ3d3cuY2xvdWRmbGFyZS5jb20xNDAyBgNVBAMTK01hbmFnZWQgQ0EgYmNj
+NzZhZTQ0NzNlZGRmMjBmOGQzMzZiZDI1ODlhOTIwHhcNMjQxMTE2MDE0OTAwWhcN
+MzkxMTEzMDE0OTAwWjAiMQswCQYDVQQGEwJVUzETMBEGA1UEAxMKQ2xvdWRmbGFy
+ZTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABAuUihJPVPUCt4Bkj5P1m+JQPeAo
+rbfL9o9KysjJ0p3q2ks0qke1CYWxpgD544o4tVtPCjZlQKWgTu+4m0e1TCejgbsw
+gbgwEwYDVR0lBAwwCgYIKwYBBQUHAwIwDAYDVR0TAQH/BAIwADAdBgNVHQ4EFgQU
+PDzGgMvZydBT/4Gg8er6HsvJpIgwHwYDVR0jBBgwFoAUTG0l5xgFvN2l4ELuPunA
+euSCf0cwUwYDVR0fBEwwSjBIoEagRIZCaHR0cDovL2NybC5jbG91ZGZsYXJlLmNv
+bS81NTI0OTViZi05MDkyLTQxNjctOTk1MS1kODI4MDY3N2Y1MzMuY3JsMA0GCSqG
+SIb3DQEBCwUAA4IBAQAXZ6C/LkKJFdRARknGSpDUvxo43oIb2Zn4LfikVyx90FuK
+RyDFffo2/f30Op3RQmTA1rKeSSb/3+0BQqyLRrN8p6Rhk5+QU6BKZ/d3uYbiELsf
+kJSh+WA2EvcX2gecQaBgItmWIyr5Iy70svh+PyY1tqQFYs0UNU9Un0A973sd/GP+
+hHNTEFHT8P6SwzaxaKoq83bpMEP0lmWwH88Qcnf6SqhAk1xyUGRx3IbGYKwdTd0F
+uHbsVOmNzN2m2GMGLKBBINr6RB3K9i5TO4QtDp/VCtrxWXciSzmc57fJ02CQMu3c
+96+5FaMZQFVqx4rJNJFxApA2hhlQvHKldPIDQjBF
+-----END CERTIFICATE-----
+EOF
 
 echo
-USER=EAimTY
-REPO=tuic
 
-response=$(curl --silent "https://api.github.com/repos/$USER/$REPO/releases")
-pre_release=$(echo "$response" | jq '.[] | select(.prerelease == false) | .tag_name' | head -n1 | sed -e 's/^"//' -e 's/"$//')
 
-if [[ "$pre_release" == "null" ]]; then
-      echo "There is no pre-release version available."
-      exit 0
-fi
 
-echo "The latest pre-release version is: $pre_release"
-echo
-if [[ -f /opt/tuic/v5/tuic-server ]]; then
-      echo
-      echo "tuic-server 已存在 🎉"
 
-else
-      echo
-      echo "最新版本为 ${pre_release}"
-      echo
-      echo "正在下载tuic-server-&{pre_release}..."
-      echo
-      wget https://github.com/EAimTY/tuic/releases/download/${pre_release}/${pre_release}-${OS_ARCH}-unknown-linux-gnu -O tuic-server && chmod +x tuic-server
-fi
-
-echo
-if [[ -f /opt/tuic/v5/domain.txt ]]; then
-      echo "域名已经存在"
-else
-      read -p "请输入域名: " DOMAIN
-      echo "${DOMAIN}" >/opt/tuic/v5/domain.txt
-fi
-echo
-if [[ -f /opt/tuic/v5/rsa.pem ]]; then
-      echo "域名证书已经配置"
-else
-      echo "错误：/opt/tuic/v5/rsa.pem 文件不存在，请检查配置。"
-      exit 1
-fi
-echo
-echo
-
-echo "正在创建配置文件..."
 
 if [[ -f /opt/tuic/v5/tuic.conf ]]; then
       echo
@@ -151,6 +127,7 @@ EOF
 fi
 
 cat <<EOF >/etc/systemd/system/tuic.service
+
 [Unit]
 Description=tuic
 After=network.target
@@ -161,6 +138,7 @@ ExecStart=/opt/tuic/v5/tuic-server -c /opt/tuic/v5/tuic.conf
 
 [Install]
 WantedBy=multi-user.target
+
 EOF
 
 systemctl daemon-reload
