@@ -39,7 +39,7 @@ bash <(curl -sSL 19510272.xyz/snell-t)
 ### ss-rust
 
 ```sh
-bash <(curl -sSL 19510272.xyz/ss)
+bash <(curl -sSL sink-4rn.pages.dev/ss)
 ```
 ### Hysteria 2
 
