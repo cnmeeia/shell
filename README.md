@@ -49,7 +49,7 @@ bash <(curl -sSL 19510272.xyz/hy2)
 ###  sysctl 
 
 ```sh
-bash <(curl -sSL 19510272.xyz/sysctl)
+bash <(curl -sSL sink-4rn.pages.dev/sysctl)
 ```
 ###  docker 
 
