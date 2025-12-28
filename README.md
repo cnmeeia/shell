@@ -44,7 +44,7 @@ bash <(curl -sSL sink-4rn.pages.dev/ss)
 ### Hysteria 2
 
 ```sh
-bash <(curl -sSL 19510272.xyz/hy2)
+bash <(curl -sSL sink-4rn.pages.dev/hy2)
 ```
 ###  sysctl 
 
