@@ -54,7 +54,7 @@ bash <(curl -sSL sink-4rn.pages.dev/sysctl)
 ###  docker 
 
 ```sh
-bash <(curl -sSL 19510272.xyz/docker)
+bash <(curl -sSL sink-4rn.pages.dev/docker)
 ```
 
 ###  swap 
