@@ -33,7 +33,7 @@ bash <(curl -sSL 19510272.xyz/snell)
 ### snell-test
 
 ```sh
-bash <(curl -sSL 19510272.xyz/snell-t)
+bash <(curl -sSL sink-4rn.pages.dev/snell-t)
 ```
 
 ### ss-rust
